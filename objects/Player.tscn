@@ -1,8 +1,11 @@
-[gd_scene load_steps=28 format=2]
+[gd_scene load_steps=39 format=2]
 
 [ext_resource path="res://objects/Player.gd" type="Script" id=1]
 [ext_resource path="res://shaders/Colorizer.shader" type="Shader" id=2]
 [ext_resource path="res://media/graphics/player_sprite.png" type="Texture" id=3]
+[ext_resource path="res://media/graphics/items.png" type="Texture" id=4]
+[ext_resource path="res://objects/component/BloodSplatterComp.tscn" type="PackedScene" id=5]
+[ext_resource path="res://objects/BloodParticle.tscn" type="PackedScene" id=6]
 
 [sub_resource type="ShaderMaterial" id=1]
 resource_local_to_scene = true
@@ -141,6 +144,194 @@ animations = [ {
 "speed": 5.0
 } ]
 
+[sub_resource type="ShaderMaterial" id=25]
+shader = ExtResource( 2 )
+shader_param/AUTO_REPLACE = false
+shader_param/IGNORE_ALPHA = false
+shader_param/COLOR_A = Color( 1, 1, 1, 1 )
+shader_param/COLOR_A_REPLACEMENT = Color( 0.72549, 0.466667, 0.188235, 1 )
+shader_param/COLOR_B = Color( 0, 0, 0, 1 )
+shader_param/COLOR_B_REPLACEMENT = Color( 0, 0, 0, 1 )
+
+[sub_resource type="ShaderMaterial" id=26]
+shader = ExtResource( 2 )
+shader_param/AUTO_REPLACE = false
+shader_param/IGNORE_ALPHA = false
+shader_param/COLOR_A = Color( 1, 1, 1, 1 )
+shader_param/COLOR_A_REPLACEMENT = Color( 1, 1, 1, 1 )
+shader_param/COLOR_B = Color( 0, 0, 0, 1 )
+shader_param/COLOR_B_REPLACEMENT = Color( 0, 0, 0, 1 )
+
+[sub_resource type="Animation" id=27]
+resource_name = "Fall"
+length = 0.4
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("GFX:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( -0.185814, 0.445961 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("GFX:rotation_degrees")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.2 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ 225.821, 218.408 ]
+}
+
+[sub_resource type="Animation" id=28]
+resource_name = "Idle"
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("GFX:rotation_degrees")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.6 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ 24.3734, 17.0254 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("GFX:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( -0.148651, 1.04055 ) ]
+}
+
+[sub_resource type="Animation" id=29]
+resource_name = "Jump"
+length = 0.4
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("GFX:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( -0.668929, 0.557442 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("GFX:rotation_degrees")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.2 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ 139.588, 150.358 ]
+}
+
+[sub_resource type="Animation" id=30]
+resource_name = "Move"
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("GFX:rotation_degrees")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.3, 0.8 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ 36.0441, 20.6586, -16.1344 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("GFX:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.3, 0.8 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( -0.148651, 1.04055 ), Vector2( -1.15204, 1.04055 ), Vector2( 1.41218, 1.30069 ) ]
+}
+
+[sub_resource type="Animation" id=31]
+resource_name = "WandIn"
+length = 0.3
+tracks/0/type = "value"
+tracks/0/path = NodePath("GFX:rotation_degrees")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.3 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ 0.0, 33.5154 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("GFX:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.3 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 3, 0.542 ), Vector2( -0.149, 1.041 ) ]
+}
+
+[sub_resource type="Animation" id=32]
+resource_name = "WandOut"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/path = NodePath("GFX:rotation_degrees")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 0.0 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("GFX:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.2 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 0.542278 ), Vector2( 3, 0.542 ) ]
+}
+
 [sub_resource type="CapsuleShape2D" id=24]
 radius = 3.0
 height = 2.0
@@ -148,17 +339,44 @@ height = 2.0
 [node name="Player" type="KinematicBody2D"]
 position = Vector2( 6.59077, 40.3789 )
 script = ExtResource( 1 )
-__meta__ = {
-"_edit_group_": true
-}
 
 [node name="ASprite" type="AnimatedSprite" parent="."]
 material = SubResource( 1 )
 frames = SubResource( 23 )
-animation = "Breath"
-frame = 3
+animation = "Idle"
 playing = true
+
+[node name="Wand" type="Node2D" parent="."]
+
+[node name="GFX" type="Node2D" parent="Wand"]
+position = Vector2( -0.149, 1.041 )
+rotation = 0.584954
+
+[node name="Shaft" type="Sprite" parent="Wand/GFX"]
+material = SubResource( 25 )
+texture = ExtResource( 4 )
+region_enabled = true
+region_rect = Rect2( 0, 0, 4, 3 )
+
+[node name="Bauble" type="Sprite" parent="Wand/GFX"]
+material = SubResource( 26 )
+position = Vector2( 2.5, 0 )
+texture = ExtResource( 4 )
+region_enabled = true
+region_rect = Rect2( 5, 0, 3, 3 )
+
+[node name="Player" type="AnimationPlayer" parent="Wand"]
+anims/Fall = SubResource( 27 )
+anims/Idle = SubResource( 28 )
+anims/Jump = SubResource( 29 )
+anims/Move = SubResource( 30 )
+anims/WandIn = SubResource( 31 )
+anims/WandOut = SubResource( 32 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 visible = false
 shape = SubResource( 24 )
+
+[node name="BloodSplatterComp" parent="." instance=ExtResource( 5 )]
+BloodParticle = ExtResource( 6 )
+BloodVelocity = 250.0

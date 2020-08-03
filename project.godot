@@ -23,7 +23,7 @@ config/icon="res://icon.png"
 
 window/size/width=64
 window/size/height=64
-window/stretch/mode="2d"
+window/stretch/mode="viewport"
 window/stretch/aspect="keep"
 
 [input]
@@ -45,7 +45,8 @@ p1_jump={
 }
 p1_use={
 "deadzone": 0.5,
-"events": [  ]
+"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":69,"unicode":0,"echo":false,"script":null)
+ ]
 }
 
 [rendering]

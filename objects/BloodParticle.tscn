@@ -1,0 +1,22 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://objects/BloodParticle.gd" type="Script" id=1]
+
+[sub_resource type="RectangleShape2D" id=8]
+extents = Vector2( 0.5, 0.5 )
+
+[sub_resource type="Gradient" id=9]
+colors = PoolColorArray( 0.351562, 0.042572, 0.042572, 1, 0.371094, 0.0318909, 0.0318909, 1 )
+
+[sub_resource type="GradientTexture" id=10]
+gradient = SubResource( 9 )
+width = 1
+
+[node name="BloodParticle" type="RigidBody2D"]
+script = ExtResource( 1 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource( 8 )
+
+[node name="Sprite" type="Sprite" parent="."]
+texture = SubResource( 10 )

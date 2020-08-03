@@ -50,18 +50,19 @@ shader_param/noise = SubResource( 3 )
 
 [node name="Fire" type="Node2D"]
 position = Vector2( 15.8267, 38.922 )
+script = ExtResource( 2 )
 __meta__ = {
 "_edit_group_": true
 }
+
+[node name="Light2D" type="Light2D" parent="."]
+scale = Vector2( 0.786386, 0.786386 )
+texture = ExtResource( 3 )
+color = Color( 0.803922, 0.568627, 0.333333, 1 )
+energy = 1.07277
+shadow_enabled = true
 
 [node name="fire" type="Sprite" parent="."]
 material = SubResource( 4 )
 scale = Vector2( 0.5, 0.5 )
 texture = ExtResource( 1 )
-script = ExtResource( 2 )
-
-[node name="Light2D" type="Light2D" parent="fire"]
-scale = Vector2( 1.60883, 1.60883 )
-texture = ExtResource( 3 )
-energy = 1.10883
-shadow_enabled = true
