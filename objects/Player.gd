@@ -14,9 +14,12 @@ var last_mouse_pos = null
 var left_down = false
 var right_down = false
 
+var idle_time = 0.0
+var idle_breath_time = rand_range(1.0, 4.0)
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass # Replace with function body.
+	pass
 
 func _input(event):
 	if event is InputEventMouseMotion:
@@ -56,11 +59,11 @@ func _physics_process(delta):
 		jumping = false
 		motion.y -= (gravity * jump_force_multiplier)
 	
-	_handle_animations(dir)
+	_handle_animations(delta, dir)
 	motion = move_and_slide_with_snap(motion, snap_vec, Vector2(0, -1), false, 4, 0.785398, true)
 
 
-func _handle_animations(direction):
+func _handle_animations(delta, direction):
 	if direction == -1:
 		$ASprite.flip_h = true
 	elif direction == 1:
@@ -70,12 +73,26 @@ func _handle_animations(direction):
 		if motion.x != 0:
 			$ASprite.animation = "Move"
 		else:
-			$ASprite.animation = "Idle"
+			_handle_idle_animations(delta)
 	else:
 		if motion.y < 0:
 			$ASprite.animation = "Jump"
 		elif motion.y > 0:
 			$ASprite.animation = "Fall"
 
-
+func _handle_idle_animations(delta):
+	if $ASprite.animation != "Breath" and $ASprite.animation != "Idle":
+		$ASprite.play("Idle")
+	else:
+		if $ASprite.animation == "Breath" and not $ASprite.is_playing():
+			$ASprite.animation = "Idle"
+			$ASprite.play("Idle")
+			idle_time = 0
+			idle_breath_time = rand_range(1.0, 4.0)
+		elif idle_time >= idle_breath_time:
+			$ASprite.play("Breath")
+		else:
+			idle_time += delta
+			
+		
 

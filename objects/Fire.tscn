@@ -1,0 +1,67 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://media/graphics/fz.png" type="Texture" id=1]
+[ext_resource path="res://objects/fireglow.gd" type="Script" id=2]
+[ext_resource path="res://media/graphics/light_mask_002.png" type="Texture" id=3]
+
+[sub_resource type="Shader" id=1]
+code = "shader_type canvas_item;
+
+uniform bool uv_to_texture_size = false;
+uniform bool force_texture_size = false;
+uniform vec2 alt_texture_size = vec2(16.0, 16.0);
+uniform sampler2D noise;
+
+vec2 adjTextureSize(ivec2 size){
+	if (force_texture_size)
+		return alt_texture_size;
+	return vec2(float(size.x), float(size.y));
+}
+
+void fragment(){
+	vec2 nuv = UV;
+	vec2 tsize = adjTextureSize(textureSize(TEXTURE, 0));
+	if (uv_to_texture_size)
+		nuv = vec2(floor(tsize * UV) / tsize);
+	vec4 base = texture(TEXTURE, nuv);
+	vec4 n = texture(noise, vec2(nuv.x, nuv.y + (TIME*0.75)));
+	
+	base.r += 0.4f - distance(vec2(0.5, nuv.y), nuv);
+	base.r = (base.r * 0.3f) + (n.r * 0.4f);
+	float a = base.r;
+	if (a < 0.4f){a = 0.0f;}
+	COLOR = vec4(float(base.r > 0.4), float(base.r > 0.5), float(base.r > 0.6), float(a > 0.25));
+}"
+custom_defines = ""
+
+[sub_resource type="OpenSimplexNoise" id=2]
+
+[sub_resource type="NoiseTexture" id=3]
+flags = 2
+seamless = true
+noise = SubResource( 2 )
+
+[sub_resource type="ShaderMaterial" id=4]
+shader = SubResource( 1 )
+shader_param/uv_to_texture_size = true
+shader_param/force_texture_size = true
+shader_param/alt_texture_size = Vector2( 8, 8 )
+shader_param/noise = SubResource( 3 )
+
+[node name="Fire" type="Node2D"]
+position = Vector2( 15.8267, 38.922 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="fire" type="Sprite" parent="."]
+material = SubResource( 4 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 1 )
+script = ExtResource( 2 )
+
+[node name="Light2D" type="Light2D" parent="fire"]
+scale = Vector2( 1.60883, 1.60883 )
+texture = ExtResource( 3 )
+energy = 1.10883
+shadow_enabled = true

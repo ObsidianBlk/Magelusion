@@ -50,5 +50,5 @@ p1_use={
 
 [rendering]
 
-environment/default_clear_color=Color( 0.0823529, 0.0509804, 0.121569, 1 )
+environment/default_clear_color=Color( 0.172549, 0.172549, 0.172549, 1 )
 environment/default_environment="res://default_env.tres"
