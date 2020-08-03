@@ -5,6 +5,8 @@ const COLOR_LIGHT_SPELL = Color(1.0, 1.0, 0.0, 1.0)
 const COLOR_FIRE_SPELL = Color(1.0, 0.0, 0.25, 1.0)
 const COLOR_WATER_SPELL = Color(0.0, 0.25, 1.0, 1.0)
 
+const PLATFORM_BIT = 1
+
 var gravity = 192.08
 var friction = 0.35
 var speed = 96
@@ -19,6 +21,7 @@ var last_mouse_pos = null
 
 var left_down = false
 var right_down = false
+var down_down = false
 
 var idle_time = 0.0
 var idle_breath_time = rand_range(1.0, 4.0)
@@ -47,6 +50,13 @@ func _input(event):
 		elif event.is_action_released("p1_right"):
 			right_down = false
 		
+		if event.is_action_pressed("p1_down"):
+			down_down = true
+			print(get_collision_mask_bit(PLATFORM_BIT))
+		elif event.is_action_released("p1_down"):
+			down_down = false
+			set_collision_mask_bit(PLATFORM_BIT, true)
+		
 		if event.is_action_pressed("p1_use") and is_on_floor():
 			casting = true
 			caststate = 0
@@ -56,7 +66,11 @@ func _input(event):
 			
 		if not casting and caststate == 0:
 			if event.is_action_pressed("p1_jump") and is_on_floor():
-				jumping = true
+				if down_down:
+					print("You should fall now Harry")
+					set_collision_mask_bit(PLATFORM_BIT, false)
+				else:
+					jumping = true
 
 func _physics_process(delta):
 	motion.y += (gravity * delta)
@@ -81,11 +95,6 @@ func _physics_process(delta):
 	
 	_handle_animations(delta, dir)
 	motion = move_and_slide_with_snap(motion, snap_vec, Vector2(0, -1), false, 4, 0.785398, true)
-	if print_delay >= 1.0:
-		print("Player Pos: ", global_position)
-		print_delay = 0.0
-	else:
-		print_delay += delta
 
 
 func _handle_animations(delta, direction):

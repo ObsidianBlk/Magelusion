@@ -1,10 +1,11 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://objects/Player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scenes/Tilesets/Brick_Tileset.tres" type="TileSet" id=2]
 [ext_resource path="res://shaders/Colorizer.shader" type="Shader" id=3]
 [ext_resource path="res://objects/Camera.tscn" type="PackedScene" id=4]
 [ext_resource path="res://objects/Fire.tscn" type="PackedScene" id=5]
+[ext_resource path="res://objects/Platform.tscn" type="PackedScene" id=6]
 
 [sub_resource type="ShaderMaterial" id=2]
 shader = ExtResource( 3 )
@@ -71,6 +72,12 @@ base_scale = 1.75
 [node name="Fire4" parent="Map" instance=ExtResource( 5 )]
 position = Vector2( 42.9714, 12.7566 )
 base_scale = 0.9
+
+[node name="Platform" parent="Map" instance=ExtResource( 6 )]
+position = Vector2( 79.5495, 31.7632 )
+
+[node name="Platform2" parent="Map" instance=ExtResource( 6 )]
+position = Vector2( 79.5495, 56.0342 )
 
 [node name="Player" parent="." instance=ExtResource( 1 )]
 position = Vector2( 3.81282, 5.85292 )
