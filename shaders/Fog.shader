@@ -3,6 +3,7 @@ shader_type canvas_item;
 // Based heavily on...
 // https://www.youtube.com/watch?v=QEaTsz_0o44
 
+uniform float seed = 0.0;
 uniform vec3 color = vec3(1.0, 1.0, 1.0);
 uniform int octaves = 4;
 uniform float speed = 0.5;
@@ -10,8 +11,13 @@ uniform float scale_a = 20.0;
 uniform float scale_b = 20.0;
 uniform vec2 offset = vec2(0.0, 0.0);
 
+
 float rand(vec2 coord){
-	return fract(sin(dot(coord, vec2(15.342, 12.33)) * 1000.0) * 1000.0);
+	float vx = (sin(seed) - 2.0) * 15.239823472956;
+	float vy = (1.0 + sin(seed)) * 87.238742634592;
+	float ma = 12367.31276531276;
+	float mb = 67273.12836498882;
+	return fract(sin(dot(coord, vec2(vx, vy)) * ma) * mb);
 }
 
 // Perlin

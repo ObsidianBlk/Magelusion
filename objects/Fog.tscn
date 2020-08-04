@@ -5,6 +5,7 @@
 
 [sub_resource type="ShaderMaterial" id=1]
 shader = ExtResource( 2 )
+shader_param/seed = 34.0
 shader_param/color = Vector3( 1, 1, 1 )
 shader_param/octaves = 4
 shader_param/speed = 0.5

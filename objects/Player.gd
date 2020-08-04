@@ -30,6 +30,8 @@ var print_delay = 1.0
 
 
 signal death(who)
+signal sprayStart(pos, sc)
+signal sprayEnd
 
 # Called when the node enters the scene tree for the first time.
 func _ready():

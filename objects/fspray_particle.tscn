@@ -1,0 +1,35 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://shaders/Colorizer.shader" type="Shader" id=1]
+[ext_resource path="res://objects/fspray_particle.gd" type="Script" id=2]
+
+[sub_resource type="ShaderMaterial" id=1]
+shader = ExtResource( 1 )
+shader_param/AUTO_REPLACE = true
+shader_param/IGNORE_ALPHA = false
+shader_param/COLOR_A = Color( 1, 1, 1, 1 )
+shader_param/COLOR_A_REPLACEMENT = Color( 1, 0, 0, 1 )
+shader_param/COLOR_B = Color( 0, 0, 0, 1 )
+shader_param/COLOR_B_REPLACEMENT = Color( 0, 0, 0, 1 )
+
+[sub_resource type="Gradient" id=2]
+offsets = PoolRealArray( 0, 0.0900621, 0.248447, 0.673913, 0.71118, 0.841615, 1 )
+colors = PoolColorArray( 1, 0.99469, 0.660156, 1, 1, 0.537255, 0, 1, 1, 0.537255, 0, 1, 1, 0, 0, 1, 0.535156, 0.535156, 0.535156, 1, 0.294118, 0.294118, 0.294118, 1, 0, 0, 0, 0.639216 )
+
+[sub_resource type="GradientTexture" id=3]
+gradient = SubResource( 2 )
+width = 1
+
+[sub_resource type="RectangleShape2D" id=4]
+extents = Vector2( 0.5, 0.5 )
+
+[node name="RigidBody2D" type="RigidBody2D"]
+mass = 0.0102041
+script = ExtResource( 2 )
+
+[node name="Sprite" type="Sprite" parent="."]
+material = SubResource( 1 )
+texture = SubResource( 3 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource( 4 )
