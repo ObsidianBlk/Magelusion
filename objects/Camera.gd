@@ -11,3 +11,5 @@ func _process(delta):
 	var target = get_node(target_node_path)
 	if target.position != position:
 		position = lerp(position, target.position, lerp_speed*delta)
+		var fog_offset = position / get_viewport().get_visible_rect().size
+		$Fog.get_material().set_shader_param("offset", fog_offset)
