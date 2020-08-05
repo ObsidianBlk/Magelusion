@@ -1,7 +1,8 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://shaders/Colorizer.shader" type="Shader" id=1]
 [ext_resource path="res://objects/fspray_particle.gd" type="Script" id=2]
+[ext_resource path="res://media/graphics/light_mask_002.png" type="Texture" id=3]
 
 [sub_resource type="ShaderMaterial" id=1]
 shader = ExtResource( 1 )
@@ -24,7 +25,10 @@ width = 1
 extents = Vector2( 0.5, 0.5 )
 
 [node name="RigidBody2D" type="RigidBody2D"]
+collision_layer = 3
+collision_mask = 3
 mass = 0.0102041
+gravity_scale = 0.1
 script = ExtResource( 2 )
 
 [node name="Sprite" type="Sprite" parent="."]
@@ -33,3 +37,7 @@ texture = SubResource( 3 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource( 4 )
+
+[node name="Light2D" type="Light2D" parent="."]
+texture = ExtResource( 3 )
+texture_scale = 0.13

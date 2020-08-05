@@ -11,3 +11,5 @@ func _process(delta):
 	var offset = n.noise.get_noise_1d(time)
 	$Light2D.scale = Vector2(base_scale + offset/3, base_scale + offset/3)
 	$Light2D.energy = base_energy + offset/3
+	$"Light2D-FogMask".scale = $Light2D.scale
+	$"Light2D-FogMask".energy = $Light2D.energy

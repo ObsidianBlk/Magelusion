@@ -26,12 +26,48 @@ var down_down = false
 var idle_time = 0.0
 var idle_breath_time = rand_range(1.0, 4.0)
 
+var spray_mode = "NONE"
+
 var print_delay = 1.0
 
 
 signal death(who)
-signal sprayStart(pos, sc)
+signal sprayStart(trigger, pos, sc)
 signal sprayEnd
+signal motion(m)
+
+
+
+func _setWandColor(c):
+	$Wand/GFX/Bauble.get_material().set_shader_param("COLOR_A_REPLACEMENT", c)
+
+func _selectMode(m):
+	var osm = spray_mode
+	if m == "Fire":
+		spray_mode = "Fire"
+		$Wand/GFX/Light2D.color = COLOR_FIRE_SPELL
+		$Wand/GFX/Light2D.enabled = true
+		_setWandColor(COLOR_FIRE_SPELL)
+	elif m == "Water":
+		$Wand/GFX/Light2D.color = COLOR_WATER_SPELL
+		$Wand/GFX/Light2D.enabled = true
+		spray_mode = "Water"
+		_setWandColor(COLOR_WATER_SPELL)
+	
+	if spray_mode != osm:
+		_stopCasting()
+
+
+func _startCasting():
+	if not casting:
+		casting = true
+		caststate = 0
+
+func _stopCasting():
+	if casting:
+		casting = false
+		caststate = 3
+		emit_signal("sprayEnd")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -59,17 +95,19 @@ func _input(event):
 			down_down = false
 			set_collision_mask_bit(PLATFORM_BIT, true)
 		
+		if event.is_action_pressed("p1_select_fire"):
+			_selectMode("Fire")
+		elif event.is_action_pressed("p1_select_water"):
+			_selectMode("Water")
+		
 		if event.is_action_pressed("p1_use") and is_on_floor():
-			casting = true
-			caststate = 0
+			_startCasting()
 		elif event.is_action_released("p1_use"):
-			casting = false
-			caststate = 1
+			_stopCasting()
 			
 		if not casting and caststate == 0:
 			if event.is_action_pressed("p1_jump") and is_on_floor():
 				if down_down:
-					print("You should fall now Harry")
 					set_collision_mask_bit(PLATFORM_BIT, false)
 				else:
 					jumping = true
@@ -84,10 +122,10 @@ func _physics_process(delta):
 		dir += 1
 	if dir != 0:
 		motion.x = lerp(motion.x, (dir * speed), acceleration * delta)
-	else:
+	elif motion.x != 0.0:
 		motion.x = lerp(motion.x, 0, friction)
-		if motion.x < 0.01:
-			motion.x = 0
+		if abs(motion.x) < 0.01:
+			motion.x = 0.0
 	
 	var snap_vec = Vector2(0, 1)
 	if jumping:
@@ -97,6 +135,9 @@ func _physics_process(delta):
 	
 	_handle_animations(delta, dir)
 	motion = move_and_slide_with_snap(motion, snap_vec, Vector2(0, -1), false, 4, 0.785398, true)
+	emit_signal("motion", motion)
+	if motion.x != 0.0 and caststate == 2:
+		emit_signal("sprayStart", spray_mode, $Wand/GFX/SprayPoint.global_position, $Wand.scale)
 
 
 func _handle_animations(delta, direction):
@@ -113,6 +154,8 @@ func _handle_animations(delta, direction):
 		else:
 			_handle_idle_animations(delta)
 	else:
+		if caststate == 2:
+			emit_signal("sprayEnd")
 		if motion.y < 0:
 			$ASprite.play("Jump")
 		elif motion.y > 0:
@@ -124,8 +167,8 @@ func _handle_animations(delta, direction):
 		if caststate == 0:
 			caststate = 1
 			$Wand/Player.play("WandOut")
-	elif not casting and caststate == 1:
-		caststate == 2
+	elif not casting and caststate > 1:
+		caststate == 3
 		$Wand/Player.play("WandIn")
 	elif caststate == 0 and $Wand/Player.current_animation != $ASprite.animation:
 		if $ASprite.animation == "Breath":
@@ -143,9 +186,6 @@ func _handle_idle_animations(delta):
 			idle_time += delta
 
 
-func _setWandColor(c):
-	$Wand/GFX/Bauble.get_material().set_shader_param("COLOR_A_REPLACEMENT", c)
-
 func _on_animation_finished():
 	if $ASprite.animation == "Breath":
 		$ASprite.play("Idle")
@@ -153,6 +193,9 @@ func _on_animation_finished():
 		idle_breath_time = rand_range(1.0, 4.0)
 		
 func _on_wand_animation_finished(anim):
+	if anim == "WandOut":
+		caststate = 2
+		emit_signal("sprayStart", spray_mode, $Wand/GFX/SprayPoint.global_position, $Wand.scale)
 	if anim == "WandIn":
 		caststate = 0
 		if $ASprite.animation == "Breath":

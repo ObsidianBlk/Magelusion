@@ -20,3 +20,4 @@ script = ExtResource( 1 )
 [node name="Frequency" type="Timer" parent="CameraShake"]
 
 [node name="Fog" parent="." instance=ExtResource( 3 )]
+light_mask = 2

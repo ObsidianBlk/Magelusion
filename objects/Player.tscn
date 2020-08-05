@@ -1,4 +1,4 @@
-[gd_scene load_steps=39 format=2]
+[gd_scene load_steps=43 format=2]
 
 [ext_resource path="res://objects/Player.gd" type="Script" id=1]
 [ext_resource path="res://shaders/Colorizer.shader" type="Shader" id=2]
@@ -6,6 +6,10 @@
 [ext_resource path="res://media/graphics/items.png" type="Texture" id=4]
 [ext_resource path="res://objects/component/BloodSplatterComp.tscn" type="PackedScene" id=5]
 [ext_resource path="res://objects/BloodParticle.tscn" type="PackedScene" id=6]
+[ext_resource path="res://objects/fspray_particle.tscn" type="PackedScene" id=7]
+[ext_resource path="res://objects/Sprayer.tscn" type="PackedScene" id=8]
+[ext_resource path="res://objects/wspray_particle.tscn" type="PackedScene" id=9]
+[ext_resource path="res://media/graphics/light_mask_002.png" type="Texture" id=10]
 
 [sub_resource type="ShaderMaterial" id=1]
 resource_local_to_scene = true
@@ -337,7 +341,6 @@ radius = 3.0
 height = 2.0
 
 [node name="Player" type="KinematicBody2D"]
-position = Vector2( 6.59077, 40.3789 )
 collision_mask = 3
 script = ExtResource( 1 )
 
@@ -350,8 +353,8 @@ playing = true
 [node name="Wand" type="Node2D" parent="."]
 
 [node name="GFX" type="Node2D" parent="Wand"]
-position = Vector2( -0.149, 1.041 )
-rotation = 0.584954
+position = Vector2( -0.148651, 1.04055 )
+rotation = 0.629088
 
 [node name="Shaft" type="Sprite" parent="Wand/GFX"]
 material = SubResource( 24 )
@@ -365,6 +368,16 @@ position = Vector2( 2.5, 0 )
 texture = ExtResource( 4 )
 region_enabled = true
 region_rect = Rect2( 5, 0, 3, 3 )
+
+[node name="SprayPoint" type="Position2D" parent="Wand/GFX"]
+position = Vector2( 4.50256, -0.680437 )
+
+[node name="Light2D" type="Light2D" parent="Wand/GFX"]
+position = Vector2( 1.9237, -0.575658 )
+enabled = false
+texture = ExtResource( 10 )
+texture_scale = 0.2
+energy = 0.75
 
 [node name="Player" type="AnimationPlayer" parent="Wand"]
 anims/Fall = SubResource( 26 )
@@ -381,3 +394,26 @@ shape = SubResource( 32 )
 [node name="BloodSplatterComp" parent="." instance=ExtResource( 5 )]
 BloodParticle = ExtResource( 6 )
 BloodVelocity = 250.0
+
+[node name="Sprayer_Fire" parent="." instance=ExtResource( 8 )]
+position = Vector2( -0.0417137, -0.0417175 )
+rotation = -0.00157903
+trigger_name = "Fire"
+Particle = ExtResource( 7 )
+particle_count = 200
+particle_out_min = 4
+particle_out_max = 8
+particle_life_min = 0.25
+particle_life_max = 1.0
+strength = 30.0
+angle_variance = 0.075
+
+[node name="Sprayer_Water" parent="." instance=ExtResource( 8 )]
+trigger_name = "Water"
+Particle = ExtResource( 9 )
+particle_count = 200
+particle_out_max = 2
+particle_life_min = 10.0
+particle_life_max = 12.0
+strength = 15.0
+angle_variance = 0.025
