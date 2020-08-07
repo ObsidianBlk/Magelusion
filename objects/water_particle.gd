@@ -14,4 +14,10 @@ func _setLife(l):
 func _process(delta):
 	if life > 0.0:
 		life -= delta
+	
+	var collist = get_colliding_bodies()
+	if collist.size() > 0:
+		for body in collist:
+			if body.is_in_group("Fire"):
+				print("BURNS!!")
 

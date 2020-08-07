@@ -6,9 +6,9 @@
 [ext_resource path="res://media/graphics/items.png" type="Texture" id=4]
 [ext_resource path="res://objects/component/BloodSplatterComp.tscn" type="PackedScene" id=5]
 [ext_resource path="res://objects/BloodParticle.tscn" type="PackedScene" id=6]
-[ext_resource path="res://objects/fspray_particle.tscn" type="PackedScene" id=7]
+[ext_resource path="res://objects/water_particle.tscn" type="PackedScene" id=7]
 [ext_resource path="res://objects/Sprayer.tscn" type="PackedScene" id=8]
-[ext_resource path="res://objects/wspray_particle.tscn" type="PackedScene" id=9]
+[ext_resource path="res://objects/fire_particle.tscn" type="PackedScene" id=9]
 [ext_resource path="res://media/graphics/light_mask_002.png" type="Texture" id=10]
 
 [sub_resource type="ShaderMaterial" id=1]
@@ -399,7 +399,7 @@ BloodVelocity = 250.0
 position = Vector2( -0.0417137, -0.0417175 )
 rotation = -0.00157903
 trigger_name = "Fire"
-Particle = ExtResource( 7 )
+Particle = ExtResource( 9 )
 particle_count = 200
 particle_out_min = 4
 particle_out_max = 8
@@ -409,11 +409,12 @@ strength = 30.0
 angle_variance = 0.075
 
 [node name="Sprayer_Water" parent="." instance=ExtResource( 8 )]
+position = Vector2( 0, -0.0350771 )
 trigger_name = "Water"
-Particle = ExtResource( 9 )
-particle_count = 200
+Particle = ExtResource( 7 )
+particle_count = 400
 particle_out_max = 2
-particle_life_min = 10.0
+particle_life_min = 8.0
 particle_life_max = 12.0
-strength = 15.0
+strength = 22.0
 angle_variance = 0.025

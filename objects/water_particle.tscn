@@ -1,0 +1,33 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://objects/water_particle.gd" type="Script" id=1]
+
+[sub_resource type="PhysicsMaterial" id=1]
+friction = 0.1
+bounce = 0.25
+
+[sub_resource type="CircleShape2D" id=2]
+radius = 0.5
+
+[sub_resource type="Gradient" id=3]
+colors = PoolColorArray( 0.246094, 0.664276, 1, 1, 0, 0.375366, 0.960938, 1 )
+
+[sub_resource type="GradientTexture" id=4]
+gradient = SubResource( 3 )
+width = 1
+
+[node name="water_particle" type="RigidBody2D" groups=[
+"Water",
+]]
+mass = 0.102041
+physics_material_override = SubResource( 1 )
+contacts_reported = 2
+contact_monitor = true
+can_sleep = false
+script = ExtResource( 1 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource( 2 )
+
+[node name="Sprite" type="Sprite" parent="."]
+texture = SubResource( 4 )
