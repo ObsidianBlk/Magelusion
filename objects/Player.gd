@@ -8,6 +8,7 @@ const COLOR_WATER_SPELL = Color(0.0, 0.25, 1.0, 1.0)
 const PLATFORM_BIT = 1
 
 const MAX_HURT_TIME = 0.5
+const MAX_INVULNERABLE_TIME = 3.0
 
 export (NodePath) var particle_container
 
@@ -21,9 +22,10 @@ var jumping = false
 var casting = false
 var caststate = 0
 
-var damagers = []
+var damage = 0.0
 var hurt_timer = MAX_HURT_TIME
 var hurt = false
+var invulnerable_timer = 0.0
 
 var last_mouse_pos = null
 
@@ -124,12 +126,13 @@ func _input(event):
 				jumping = true
 
 func _physics_process(delta):
-	var dmg = 0
-	if not hurt:
-		dmg = _dmgSum()
-		if dmg > 0:
-			hurt = true
-			_stopCasting()
+	if damage > 0.0:
+		damage = 0.0 # TODO: Actually subtract this from some form of life tracker!
+		hurt = true
+		_stopCasting()
+	
+	if invulnerable_timer > 0.0:
+		invulnerable_timer -= delta
 	
 	if not hurt:
 		motion.y += (gravity * delta)
@@ -163,6 +166,7 @@ func _physics_process(delta):
 		if hurt_timer <= 0.0:
 			hurt_timer = MAX_HURT_TIME
 			hurt = false
+			invulnerable_timer = MAX_INVULNERABLE_TIME
 		_handle_animations(delta, 0)
 		
 
@@ -176,9 +180,9 @@ func _handle_animations(delta, direction):
 		$Wand.scale = Vector2(1, 1)
 	
 	if hurt and $ASprite.animation != "Hurt":
-		$ASprite.play(hurt)
+		$ASprite.animation = "Hurt"
 		$Wand.visible = false
-	elif not hurt and $ASprite.animation == "Hurt":
+	elif not hurt and not $Wand.visible:
 		$Wand.visible = true
 	
 	if is_on_floor():
@@ -234,38 +238,6 @@ func _on_wand_animation_finished(anim):
 			$Wand/Player.play($ASprite.animation)
 
 
-func _dmgSum():
-	var sum = 0.0
-	var rlist = []
-	if damagers.size() > 0:
-		for i in range(damagers.size()):
-			sum += damagers[i][0]
-			if damagers[i][1] == null:
-				rlist.append(i)
-		if rlist.size() > 0:
-			rlist.sort()
-			rlist.invert()
-			for r in range(rlist.size()):
-				damagers.remove(rlist[r])
-	return sum
-
-func _dmgSourceIndex(source):
-	if damagers.size() > 0:
-		for i in range(damagers.size()):
-			if damagers[i][1] == source:
-				return i
-	return -1
-
-func addDamageSource(amount, source):
-	if source != null:
-		if _dmgSourceIndex(source) < 0:
-			damagers.append([amount, source])
-	else:
-		damagers.append([amount, null])
-
-func removeDamageSource(source):
-	var i = _dmgSourceIndex(source)
-	if i >= 0:
-		damagers.remove(i)
-
-
+func takeDamage(amount):
+	if amount > 0.0 and not hurt and invulnerable_timer <= 0.0:
+		damage += amount
