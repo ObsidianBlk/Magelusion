@@ -1,7 +1,9 @@
 extends Node2D
 
 export(String) var trigger_name = ""
+export(bool) var debug = false
 export(PackedScene) var Particle
+export(NodePath) var particle_container
 export(int, 1, 1000, 1) var particle_count = 1
 export(int, 1, 1000, 1) var particle_out_min = 1
 export(int, 1, 1000, 1) var particle_out_max = 1
@@ -34,7 +36,7 @@ func _ready():
 	for i in range(particle_count):
 		var p = Particle.instance()
 		if p.has_method("isAlive"):
-			particle_pool.push_back(Particle.instance())
+			particle_pool.push_back(p)
 	if particle_pool.size() != particle_count:
 		print ("WARNING: Unable to build complete particle pool.")
 	else:
@@ -58,6 +60,8 @@ func _ready():
 
 
 func _process(delta):
+	if debug:
+		print("Pool Size: ", particle_pool.size(), " | Active: ", active_particles.size())
 	if spray_active:
 		if particle_pool.size() > 0:
 			var spawncount = floor(rand_range(particle_out_min, particle_out_max))
@@ -73,7 +77,12 @@ func _process(delta):
 				lv = lv.rotated(deg2rad(angle + (360 * avar))) * spray_scale
 				
 				p.linear_velocity = base_motion + lv
-				get_tree().root.add_child(p)
+				
+				if particle_container:
+					var pcn = get_node(particle_container)
+					pcn.add_child(p)
+				else:
+					get_tree().root.add_child(p)
 				
 				active_particles.append(p)
 	if active_particles.size() > 0:
@@ -88,7 +97,11 @@ func _process(delta):
 				for i in range(rlist.size()):
 					var p = active_particles[rlist[i]]
 					active_particles.remove(rlist[i])
-					get_tree().root.remove_child(p)
+					if particle_container:
+						var pcn = get_node(particle_container)
+						pcn.remove_child(p)
+					else:
+						get_tree().root.remove_child(p)
 					particle_pool.push_back(p)
 
 

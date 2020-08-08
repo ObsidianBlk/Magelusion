@@ -4,7 +4,8 @@
 [ext_resource path="res://objects/fire_particle.gd" type="Script" id=2]
 [ext_resource path="res://media/graphics/light_mask_002.png" type="Texture" id=3]
 
-[sub_resource type="ShaderMaterial" id=1]
+[sub_resource type="ShaderMaterial" id=5]
+resource_local_to_scene = true
 shader = ExtResource( 1 )
 shader_param/AUTO_REPLACE = true
 shader_param/IGNORE_ALPHA = false
@@ -34,7 +35,7 @@ gravity_scale = 0.1
 script = ExtResource( 2 )
 
 [node name="Sprite" type="Sprite" parent="."]
-material = SubResource( 1 )
+material = SubResource( 5 )
 texture = SubResource( 3 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]

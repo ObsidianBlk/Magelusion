@@ -340,7 +340,9 @@ tracks/1/keys = {
 radius = 3.0
 height = 2.0
 
-[node name="Player" type="KinematicBody2D"]
+[node name="Player" type="KinematicBody2D" groups=[
+"Player",
+]]
 collision_mask = 3
 script = ExtResource( 1 )
 
@@ -404,7 +406,7 @@ particle_count = 200
 particle_out_min = 4
 particle_out_max = 8
 particle_life_min = 0.25
-particle_life_max = 1.0
+particle_life_max = 1.5
 strength = 30.0
 angle_variance = 0.075
 
