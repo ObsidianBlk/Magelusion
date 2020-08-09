@@ -42,6 +42,7 @@ var print_delay = 1.0
 
 
 signal death(who)
+signal hurt(who)
 signal sprayStart(trigger, pos, sc)
 signal sprayEnd
 signal motion(m)
@@ -130,6 +131,7 @@ func _physics_process(delta):
 		damage = 0.0 # TODO: Actually subtract this from some form of life tracker!
 		hurt = true
 		_stopCasting()
+		emit_signal("hurt", self)
 	
 	if invulnerable_timer > 0.0:
 		invulnerable_timer -= delta
