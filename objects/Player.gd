@@ -22,6 +22,8 @@ var jumping = false
 var casting = false
 var caststate = 0
 
+var push_vector = Vector2(0.0, 0.0)
+
 var damage = 0.0
 var hurt_timer = MAX_HURT_TIME
 var hurt = false
@@ -137,7 +139,8 @@ func _physics_process(delta):
 		invulnerable_timer -= delta
 	
 	if not hurt:
-		motion.y += (gravity * delta)
+		if not is_on_floor():
+			motion.y += (gravity * delta)
 	
 		var dir = 0
 		if left_down:
@@ -156,6 +159,7 @@ func _physics_process(delta):
 			snap_vec = Vector2.ZERO
 			jumping = false
 			motion.y -= (gravity * jump_force_multiplier)
+		
 	
 		_handle_animations(delta, dir)
 		motion = move_and_slide_with_snap(motion, snap_vec, Vector2(0, -1), false, 4, 0.785398, true)
@@ -243,3 +247,6 @@ func _on_wand_animation_finished(anim):
 func takeDamage(amount):
 	if amount > 0.0 and not hurt and invulnerable_timer <= 0.0:
 		damage += amount
+
+func push(vpush):
+	motion += vpush
