@@ -9,6 +9,7 @@ const PLATFORM_BIT = 1
 
 const MAX_HURT_TIME = 0.5
 const MAX_INVULNERABLE_TIME = 3.0
+const MAX_USING_TIME = 0.5
 
 export (NodePath) var particle_container
 
@@ -21,6 +22,7 @@ var jump_force_multiplier = 0.5
 var jumping = false
 var casting = false
 var caststate = 0
+var using_time = 0.0
 
 var push_vector = Vector2(0.0, 0.0)
 
@@ -47,6 +49,7 @@ signal death(who)
 signal hurt(who)
 signal sprayStart(trigger, pos, sc)
 signal sprayEnd
+signal activate
 signal motion(m)
 
 
@@ -107,7 +110,6 @@ func _input(event):
 		
 		if event.is_action_pressed("p1_down"):
 			down_down = true
-			print(get_collision_mask_bit(PLATFORM_BIT))
 		elif event.is_action_released("p1_down"):
 			down_down = false
 			set_collision_mask_bit(PLATFORM_BIT, true)
@@ -121,12 +123,17 @@ func _input(event):
 			_startCasting()
 		elif event.is_action_released("p1_cast"):
 			_stopCasting()
-			
-		if event.is_action_pressed("p1_jump") and is_on_floor():
-			if down_down:
-				set_collision_mask_bit(PLATFORM_BIT, false)
-			else:
-				jumping = true
+		
+		
+		if is_on_floor():
+			if event.is_action_pressed("p1_use"):
+				motion.x = 0.0
+				using_time = MAX_USING_TIME
+			elif event.is_action_pressed("p1_jump"):
+				if down_down:
+					set_collision_mask_bit(PLATFORM_BIT, false)
+				else:
+					jumping = true
 
 func _physics_process(delta):
 	if damage > 0.0:
@@ -138,16 +145,22 @@ func _physics_process(delta):
 	if invulnerable_timer > 0.0:
 		invulnerable_timer -= delta
 	
+	if using_time > 0.0:
+		using_time -= delta
+		if using_time <= 0.0:
+			emit_signal("activate")
+			using_time = 0.0
+	
 	if not hurt:
 		if not is_on_floor():
-			motion.y += (gravity * delta)
+			motion.y = clamp(motion.y + (gravity * delta), -1000, gravity * 2)
 	
 		var dir = 0
 		if left_down:
 			dir -= 1
 		if right_down:
 			dir += 1
-		if dir != 0:
+		if dir != 0 and using_time <= 0.0:
 			motion.x = lerp(motion.x, (dir * speed), acceleration * delta)
 		elif motion.x != 0.0:
 			motion.x = lerp(motion.x, 0, friction)
@@ -194,6 +207,9 @@ func _handle_animations(delta, direction):
 	if is_on_floor():
 		if motion.x != 0:
 			$ASprite.play("Move")
+		elif using_time > 0.0:
+			if $ASprite.animation != "Use":
+				$ASprite.play("Use")
 		else:
 			_handle_idle_animations(delta)
 	else:
@@ -212,7 +228,7 @@ func _handle_animations(delta, direction):
 	elif caststate == 0 and $Wand/Player.current_animation != $ASprite.animation:
 		if $ASprite.animation == "Breath":
 			$Wand/Player.play("Idle")
-		elif $ASprite.animation != "Hurt":
+		elif $ASprite.animation != "Hurt" and $ASprite.animation != "Use":
 			$Wand/Player.play($ASprite.animation)
 
 func _handle_idle_animations(delta):
