@@ -1,0 +1,39 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://media/graphics/tileset_001.png" type="Texture" id=1]
+[ext_resource path="res://objects/Gate.gd" type="Script" id=2]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 4, 1 )
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 4, 7 )
+
+[node name="Gate" type="KinematicBody2D"]
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_group_": true,
+"_editor_description_": "Gate will open or close based on it's open state. It will move up until it's main collision shape (located at the bottom of the Gate) collides with something.
+
+NOTE: It's really assumed to be placed in a space that's only 16pixels tall. Will look rediculous otherwise."
+}
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( 0, 7 )
+shape = SubResource( 1 )
+
+[node name="Sprite" type="Sprite" parent="."]
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 0, 112, 8, 16 )
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+position = Vector2( 0, -1 )
+collision_layer = 2
+collision_mask = 0
+__meta__ = {
+"_editor_description_": "This static body is for blocking the player from passing the door while not triggering the Gate Raise/Lower collision checks!"
+}
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+shape = SubResource( 2 )

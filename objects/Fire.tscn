@@ -61,18 +61,18 @@ lit = false
 
 [node name="Light2D" type="Light2D" parent="."]
 visible = false
-scale = Vector2( 0.961624, 0.961624 )
+scale = Vector2( 0.959017, 0.959017 )
 texture = ExtResource( 3 )
 color = Color( 0.803922, 0.568627, 0.333333, 1 )
-energy = 0.961624
+energy = 0.959017
 shadow_enabled = true
 
 [node name="Light2D-FogMask" type="Light2D" parent="."]
 visible = false
 light_mask = 2
-scale = Vector2( 0.961624, 0.961624 )
+scale = Vector2( 0.959017, 0.959017 )
 texture = ExtResource( 4 )
-energy = 0.961624
+energy = 0.959017
 shadow_item_cull_mask = 2
 
 [node name="fire" type="Sprite" parent="."]

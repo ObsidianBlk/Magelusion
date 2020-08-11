@@ -86,6 +86,9 @@ func _stopCasting():
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	# Defining the audio used by the player!
+	AudioManager.addSFXSample("water_spell", "res://media/audio/sfx/loop_water_03.ogg", self)
+	# Now the rest of it all!
 	var n = get_node(particle_container)
 	var npath = n.get_path()
 	$Sprayer_Fire.particle_container = npath
@@ -93,6 +96,8 @@ func _ready():
 	
 	$ASprite.connect("animation_finished", self, "_on_animation_finished")
 	$Wand/Player.connect("animation_finished", self, "_on_wand_animation_finished")
+
+
 
 func _input(event):
 	if event is InputEventMouseMotion:
@@ -224,6 +229,8 @@ func _handle_animations(delta, direction):
 			$Wand/Player.play("WandOut")
 	elif not casting and caststate > 1:
 		caststate == 3
+		if spray_mode == "Water":
+			AudioManager.stopSFX("water_spell")
 		$Wand/Player.play("WandIn")
 	elif caststate == 0 and $Wand/Player.current_animation != $ASprite.animation:
 		if $ASprite.animation == "Breath":
@@ -251,6 +258,8 @@ func _on_animation_finished():
 func _on_wand_animation_finished(anim):
 	if anim == "WandOut":
 		caststate = 2
+		if spray_mode == "Water":
+			AudioManager.playSFX("water_spell", true)
 		emit_signal("sprayStart", spray_mode, $Wand/GFX/SprayPoint.global_position, $Wand.scale)
 	if anim == "WandIn":
 		caststate = 0
