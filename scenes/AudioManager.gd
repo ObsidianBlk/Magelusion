@@ -96,15 +96,28 @@ func playMusic(name : String):
 	return false
 
 
-func playSFX(name : String, loop : bool):
+func playSFX(name : String, loop : bool = false, target : Node2D = null, distance : float = 2000):
 	if name in sfxDict:
 		var sample = _GetSample(sfxDict[name])
 		if sample != null:
 			var player = _GetOldestSFXPlayer()
 			if player != null:
+				if "loop_mode" in sample:
+					print(sample.loop_mode)
+					if loop:
+						sample.loop_mode = AudioStreamSample.LOOP_FORWARD
+						sample.loop_begin = 0
+						sample.loop_end = sample.get_length() * sample.mix_rate
+					else:
+						sample.loop_mode = AudioStreamSample.LOOP_DISABLED
+				else:
+					sample.set_loop(loop)
 				player.stop()
 				player.stream = sample
-				player.stream.set_loop(loop)
+				#player.stream.set_loop(loop)
+				if target != null:
+					player.global_position = target.global_position
+					player.max_distance = distance
 				player.play()
 			return true
 	print("WARNING: Cannot play SFX '", name, "'. Not found in sample library.")

@@ -70,8 +70,8 @@ tile_data = PoolIntArray( 3, 10, 0, 6, 3, 0, 65542, 6, 0, 65544, 7, 0, 131077, 2
 [node name="Gate" parent="Map" instance=ExtResource( 10 )]
 position = Vector2( 180, 10 )
 switch_path = NodePath("../Wall Switch2")
-lift_speed = 25.0
-fall_speed = 50.0
+lift_speed = 8.0
+fall_speed = 25.0
 
 [node name="Main Map" type="TileMap" parent="Map"]
 material = SubResource( 2 )

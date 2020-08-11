@@ -59,19 +59,32 @@ func _setWandColor(c):
 
 func _selectMode(m):
 	var osm = spray_mode
-	if m == "Fire":
-		spray_mode = "Fire"
-		$Wand/GFX/Light2D.color = COLOR_FIRE_SPELL
-		$Wand/GFX/Light2D.enabled = true
-		_setWandColor(COLOR_FIRE_SPELL)
-	elif m == "Water":
-		$Wand/GFX/Light2D.color = COLOR_WATER_SPELL
-		$Wand/GFX/Light2D.enabled = true
-		spray_mode = "Water"
-		_setWandColor(COLOR_WATER_SPELL)
+	match m:
+		"Fire":
+			spray_mode = "Fire"
+			$Wand/GFX/Light2D.color = COLOR_FIRE_SPELL
+			$Wand/GFX/Light2D.enabled = true
+			_setWandColor(COLOR_FIRE_SPELL)
+		"Water":
+			$Wand/GFX/Light2D.color = COLOR_WATER_SPELL
+			$Wand/GFX/Light2D.enabled = true
+			spray_mode = "Water"
+			_setWandColor(COLOR_WATER_SPELL)
 	
 	if spray_mode != osm:
 		_stopCasting()
+
+func _playCastingSound(play:bool = true):
+	var spell = ""
+	match spray_mode:
+		"Fire":
+			spell = "fire_spell"
+		"Water":
+			spell = "water_spell"
+	if play:
+		AudioManager.playSFX(spell, true)
+	else:
+		AudioManager.stopSFX(spell)
 
 func _startCasting():
 	if not casting:
@@ -87,7 +100,8 @@ func _stopCasting():
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	# Defining the audio used by the player!
-	AudioManager.addSFXSample("water_spell", "res://media/audio/sfx/loop_water_03.ogg", self)
+	AudioManager.addSFXSample("water_spell", "res://media/audio/sfx/fr-water.wav", self)
+	AudioManager.addSFXSample("fire_spell", "res://media/audio/sfx/fire-loop1.wav", self)
 	# Now the rest of it all!
 	var n = get_node(particle_container)
 	var npath = n.get_path()
@@ -229,8 +243,7 @@ func _handle_animations(delta, direction):
 			$Wand/Player.play("WandOut")
 	elif not casting and caststate > 1:
 		caststate == 3
-		if spray_mode == "Water":
-			AudioManager.stopSFX("water_spell")
+		_playCastingSound(false)
 		$Wand/Player.play("WandIn")
 	elif caststate == 0 and $Wand/Player.current_animation != $ASprite.animation:
 		if $ASprite.animation == "Breath":
@@ -258,8 +271,7 @@ func _on_animation_finished():
 func _on_wand_animation_finished(anim):
 	if anim == "WandOut":
 		caststate = 2
-		if spray_mode == "Water":
-			AudioManager.playSFX("water_spell", true)
+		_playCastingSound()
 		emit_signal("sprayStart", spray_mode, $Wand/GFX/SprayPoint.global_position, $Wand.scale)
 	if anim == "WandIn":
 		caststate = 0
