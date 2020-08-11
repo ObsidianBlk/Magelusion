@@ -8,15 +8,25 @@ var sfxDict = {}
 var streamsDict = {}
 
 
-func _GetOldestSFXPlayer():
+func _GetBestSFXPlayer():
 	var last_child = null
 	
 	for child in $SFX.get_children():
-		if last_child == null:
+		if not child.playing:
+			# If the child is not currently playing anything, it's instantly
+			# available!
+			last_child = child
+			break;
+		elif last_child == null:
+			# If we haven't picked a child yet, just assume this one for now
 			last_child = child
 		elif child.get_playback_position() > last_child.get_playback_position():
+			# Assuming everything is playing something, just take the player that's been
+			# playing the longest
 			last_child = child
+	# Have a child? Maybe. Return it!
 	return last_child
+
 
 func _GetSFXPlayFromSample(sample):
 	for child in $SFX.get_children():
@@ -100,10 +110,9 @@ func playSFX(name : String, loop : bool = false, target : Node2D = null, distanc
 	if name in sfxDict:
 		var sample = _GetSample(sfxDict[name])
 		if sample != null:
-			var player = _GetOldestSFXPlayer()
+			var player = _GetBestSFXPlayer()
 			if player != null:
 				if "loop_mode" in sample:
-					print(sample.loop_mode)
 					if loop:
 						sample.loop_mode = AudioStreamSample.LOOP_FORWARD
 						sample.loop_begin = 0
@@ -114,7 +123,6 @@ func playSFX(name : String, loop : bool = false, target : Node2D = null, distanc
 					sample.set_loop(loop)
 				player.stop()
 				player.stream = sample
-				#player.stream.set_loop(loop)
 				if target != null:
 					player.global_position = target.global_position
 					player.max_distance = distance
