@@ -160,7 +160,7 @@ tile_data = PoolIntArray( 196615, 26, 0, 262148, 23, 0, 262149, 25, 0, 262151, 3
 lerp_speed = 7.24
 
 [node name="CanvasModulate" type="CanvasModulate" parent="."]
-color = Color( 0.141176, 0.141176, 0.141176, 1 )
+color = Color( 0, 0, 0, 1 )
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource( 3 )

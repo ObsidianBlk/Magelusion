@@ -5,12 +5,13 @@
 
 [sub_resource type="ShaderMaterial" id=1]
 shader = ExtResource( 2 )
-shader_param/seed = 34.0
+shader_param/seed = 35.0
+shader_param/strength = 0.2
 shader_param/color = Vector3( 1, 1, 1 )
 shader_param/octaves = 4
 shader_param/speed = 0.5
 shader_param/scale_a = 8.0
-shader_param/scale_b = 5.0
+shader_param/scale_b = 10.0
 shader_param/offset = Vector2( 0, 0 )
 
 [node name="Fog" type="Sprite"]

@@ -1,11 +1,14 @@
 extends KinematicBody2D
 
+const PLATFORM_BIT = 1
+
 const COLOR_NO_SPELL = Color(1.0, 1.0, 1.0, 1.0)
 const COLOR_LIGHT_SPELL = Color(1.0, 1.0, 0.0, 1.0)
 const COLOR_FIRE_SPELL = Color(1.0, 0.0, 0.25, 1.0)
 const COLOR_WATER_SPELL = Color(0.0, 0.25, 1.0, 1.0)
-
-const PLATFORM_BIT = 1
+const SPELL_NAMES = ["None", "Light", "Fire", "Water"]
+const WAND_LIGHT_SCALE_MIN = 0.2
+const WAND_LIGHT_SCALE_MAX = 1.0
 
 const MAX_HURT_TIME = 0.5
 const MAX_INVULNERABLE_TIME = 3.0
@@ -20,7 +23,6 @@ var acceleration = 0.75
 var motion = Vector2(0, 0)
 var jump_force_multiplier = 0.5
 var jumping = false
-var casting = false
 var caststate = 0
 var using_time = 0.0
 
@@ -40,7 +42,8 @@ var down_down = false
 var idle_time = 0.0
 var idle_breath_time = rand_range(1.0, 4.0)
 
-var spray_mode = "NONE"
+enum SPELL {NONE=0, LIGHT=1, FIRE=2, WATER=3}
+var spell_mode = SPELL.NONE
 
 var print_delay = 1.0
 
@@ -48,6 +51,7 @@ var print_delay = 1.0
 signal death(who)
 signal hurt(who)
 signal sprayStart(trigger, pos, sc)
+signal sprayUpdate(pos, sc)
 signal sprayEnd
 signal activate
 signal motion(m)
@@ -57,29 +61,46 @@ signal motion(m)
 func _setWandColor(c):
 	$Wand/GFX/Bauble.get_material().set_shader_param("COLOR_A_REPLACEMENT", c)
 
+func _scrollMode(dir):
+	if dir != 0:
+		var cm = spell_mode + dir
+		if cm < 0:
+			_selectMode(SPELL.WATER)
+		elif cm > SPELL.WATER:
+			_selectMode(SPELL.NONE)
+		else:
+			_selectMode(cm)
+
+
 func _selectMode(m):
-	var osm = spray_mode
+	var osm = spell_mode
+	spell_mode = m
 	match m:
-		"Fire":
-			spray_mode = "Fire"
+		SPELL.NONE:
+			$Wand/GFX/Light2D.enabled = false
+			_setWandColor(COLOR_NO_SPELL)
+		SPELL.LIGHT:
+			$Wand/GFX/Light2D.color = COLOR_LIGHT_SPELL
+			$Wand/GFX/Light2D.enabled = true
+			_setWandColor(COLOR_LIGHT_SPELL)
+		SPELL.FIRE:
 			$Wand/GFX/Light2D.color = COLOR_FIRE_SPELL
 			$Wand/GFX/Light2D.enabled = true
 			_setWandColor(COLOR_FIRE_SPELL)
-		"Water":
+		SPELL.WATER:
 			$Wand/GFX/Light2D.color = COLOR_WATER_SPELL
 			$Wand/GFX/Light2D.enabled = true
-			spray_mode = "Water"
 			_setWandColor(COLOR_WATER_SPELL)
 	
-	if spray_mode != osm:
+	if spell_mode != osm:
 		_stopCasting()
 
 func _playCastingSound(play:bool = true):
 	var spell = ""
-	match spray_mode:
-		"Fire":
+	match spell_mode:
+		SPELL.FIRE:
 			spell = "fire_spell"
-		"Water":
+		SPELL.WATER:
 			spell = "water_spell"
 	if play:
 		AudioManager.playSFX(spell, true)
@@ -87,15 +108,54 @@ func _playCastingSound(play:bool = true):
 		AudioManager.stopSFX(spell)
 
 func _startCasting():
-	if not casting:
-		casting = true
-		caststate = 0
+	if caststate == 0:
+		caststate = 1
+		$Wand/Player.play("WandOut")
 
 func _stopCasting():
-	if casting:
-		casting = false
-		caststate = 3
-		emit_signal("sprayEnd")
+	if caststate == 1:
+		caststate = 2
+		$Wand/Player.play("WandIn")
+		_handleSpellEffect(false)
+
+
+func _handleSpellEffect(enable):
+	if enable:
+		match spell_mode:
+			SPELL.NONE:
+				pass
+			SPELL.LIGHT:
+				$Wand/GFX/Tween.interpolate_property(
+					$Wand/GFX/Light2D, "texture_scale",
+					$Wand/GFX/Light2D.texture_scale, WAND_LIGHT_SCALE_MAX,
+					0.25, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT
+				)
+				$Wand/GFX/Tween.start()
+			SPELL.FIRE:
+				_playCastingSound()
+				emit_signal("sprayStart", SPELL_NAMES[spell_mode], $Wand/GFX/SprayPoint.global_position, $Wand.scale)
+			SPELL.WATER:
+				_playCastingSound()
+				emit_signal("sprayStart", SPELL_NAMES[spell_mode], $Wand/GFX/SprayPoint.global_position, $Wand.scale)
+	else:
+		match spell_mode:
+			SPELL.NONE:
+				pass
+			SPELL.LIGHT:
+				$Wand/GFX/Tween.interpolate_property(
+					$Wand/GFX/Light2D, "texture_scale",
+					$Wand/GFX/Light2D.texture_scale, WAND_LIGHT_SCALE_MIN,
+					0.25, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT
+				)
+				$Wand/GFX/Tween.start()
+			SPELL.FIRE:
+				_playCastingSound(false)
+				emit_signal("sprayEnd")
+			SPELL.WATER:
+				_playCastingSound(false)
+				emit_signal("sprayEnd")
+
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -133,10 +193,18 @@ func _input(event):
 			down_down = false
 			set_collision_mask_bit(PLATFORM_BIT, true)
 		
-		if event.is_action_pressed("p1_select_fire"):
-			_selectMode("Fire")
-		elif event.is_action_pressed("p1_select_water"):
-			_selectMode("Water")
+		if caststate == 0:
+			if event.is_action_pressed("p1_select_fire"):
+				_selectMode(SPELL.FIRE)
+			elif event.is_action_pressed("p1_select_water"):
+				_selectMode(SPELL.WATER)
+			elif event.is_action_pressed("p1_select_light"):
+				_selectMode(SPELL.LIGHT)
+			elif event.is_action_pressed("p1_next_spell"):
+				_scrollMode(1)
+			elif event.is_action_pressed("p1_prev_spell"):
+				_scrollMode(-1)
+			
 		
 		if event.is_action_pressed("p1_cast"):
 			_startCasting()
@@ -145,7 +213,7 @@ func _input(event):
 		
 		
 		if is_on_floor():
-			if event.is_action_pressed("p1_use"):
+			if event.is_action_pressed("p1_use") and caststate == 0:
 				motion.x = 0.0
 				using_time = MAX_USING_TIME
 			elif event.is_action_pressed("p1_jump"):
@@ -196,8 +264,8 @@ func _physics_process(delta):
 		_handle_animations(delta, dir)
 		motion = move_and_slide_with_snap(motion, snap_vec, Vector2(0, -1), false, 4, 0.785398, true)
 		emit_signal("motion", Vector2(motion.x, 0.0))
-		if caststate == 2:
-			emit_signal("sprayStart", spray_mode, $Wand/GFX/SprayPoint.global_position, $Wand.scale)
+		if caststate == 1:
+			emit_signal("sprayUpdate", $Wand/GFX/SprayPoint.global_position, $Wand.scale)
 	else:
 		# TODO: Do something with dmg!!
 		hurt_timer -= delta
@@ -237,15 +305,7 @@ func _handle_animations(delta, direction):
 		elif motion.y > 0:
 			$ASprite.play("Fall")
 	
-	if casting:
-		if caststate == 0:
-			caststate = 1
-			$Wand/Player.play("WandOut")
-	elif not casting and caststate > 1:
-		caststate == 3
-		_playCastingSound(false)
-		$Wand/Player.play("WandIn")
-	elif caststate == 0 and $Wand/Player.current_animation != $ASprite.animation:
+	if caststate == 0 and $Wand/Player.current_animation != $ASprite.animation:
 		if $ASprite.animation == "Breath":
 			$Wand/Player.play("Idle")
 		elif $ASprite.animation != "Hurt" and $ASprite.animation != "Use":
@@ -270,9 +330,7 @@ func _on_animation_finished():
 		
 func _on_wand_animation_finished(anim):
 	if anim == "WandOut":
-		caststate = 2
-		_playCastingSound()
-		emit_signal("sprayStart", spray_mode, $Wand/GFX/SprayPoint.global_position, $Wand.scale)
+		_handleSpellEffect(true)
 	if anim == "WandIn":
 		caststate = 0
 		if $ASprite.animation == "Breath":

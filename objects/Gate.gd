@@ -58,9 +58,10 @@ func _process(delta):
 	elif state == State.RAISE:
 		motion.y = lerp(motion.y, -lift_speed, lift_acceleration * delta)
 	
-	var res = move_and_collide(motion)
-	if res:
-		state = State.REST
+	if motion.length() > 0.0:
+		var res = move_and_collide(motion)
+		if res:
+			state = State.REST
 
 func _on_switch_on():
 	stateSwitched = true

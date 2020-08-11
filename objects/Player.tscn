@@ -381,6 +381,8 @@ texture = ExtResource( 10 )
 texture_scale = 0.2
 energy = 0.75
 
+[node name="Tween" type="Tween" parent="Wand/GFX"]
+
 [node name="Player" type="AnimationPlayer" parent="Wand"]
 anims/Fall = SubResource( 26 )
 anims/Idle = SubResource( 27 )

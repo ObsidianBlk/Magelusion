@@ -22,6 +22,7 @@ var base_motion = Vector2(0.0, 0.0)
 
 const SPRAY_START_SIGNAL_NAME = "sprayStart"
 const SPRAY_END_SIGNAL_NAME = "sprayEnd"
+const SPRAY_UPDATE_SIGNAL_NAME = "sprayUpdate"
 const MOTION_SIGNAL_NAME = "motion"
 
 func start(pos, sc):
@@ -42,19 +43,23 @@ func _ready():
 	else:
 		var foundStart = false
 		var foundEnd = false
+		var foundUpdate = false
 		var foundMotion = false
 		for parentSignal in get_parent().get_signal_list():
 			if parentSignal["name"] == SPRAY_START_SIGNAL_NAME:
 				foundStart = true
 			elif parentSignal["name"] == SPRAY_END_SIGNAL_NAME:
 				foundEnd = true
+			elif parentSignal["name"] == SPRAY_UPDATE_SIGNAL_NAME:
+				foundUpdate = true
 			elif parentSignal["name"] == MOTION_SIGNAL_NAME:
 				foundMotion = true
 		if foundStart and foundEnd:
 			var parent = get_parent()
 			parent.connect(SPRAY_START_SIGNAL_NAME, self, "_on_start")
 			parent.connect(SPRAY_END_SIGNAL_NAME, self, "_on_end")
-			
+			if foundUpdate:
+				parent.connect(SPRAY_UPDATE_SIGNAL_NAME, self, "_on_update")
 			if foundMotion:
 				parent.connect(MOTION_SIGNAL_NAME, self, "_on_motion")
 
@@ -111,6 +116,11 @@ func _on_start(tname, pos, sc):
 
 func _on_end():
 	end()
+
+func _on_update(pos, sc):
+	if spray_active:
+		spray_pos = pos
+		spray_scale = sc
 
 func _on_motion(m):
 	base_motion = m;

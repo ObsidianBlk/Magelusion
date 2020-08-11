@@ -1,9 +1,11 @@
 shader_type canvas_item;
+render_mode blend_add, unshaded;
 
 // Based heavily on...
 // https://www.youtube.com/watch?v=QEaTsz_0o44
 
 uniform float seed = 0.0;
+uniform float strength = 1.0;
 uniform vec3 color = vec3(1.0, 1.0, 1.0);
 uniform int octaves = 4;
 uniform float speed = 0.5;
@@ -51,9 +53,5 @@ float fbm(vec2 coord){
 void fragment(){
 	vec2 coord = (UV + offset);
 	float motion = fbm((coord*scale_b) + fbm((coord*scale_a) + (TIME * speed)));
-	COLOR = vec4(color, motion);
-}
-
-void light(){
-	LIGHT.a = 1.0 - LIGHT.a;
+	COLOR = vec4(color, motion * strength);
 }
