@@ -44,8 +44,8 @@ func _disconnectSwitch():
 
 func _ready():
 	ready = true
-	AudioManager.addSFXSample("gate_open", "res://media/audio/sfx/gate_opening.wav", self)
-	AudioManager.addSFXSample("gate_close", "res://media/audio/sfx/gate_closing.wav", self)
+	$AudioCtrl.addSample("gate_open", "res://media/audio/sfx/gate_opening.wav")
+	$AudioCtrl.addSample("gate_close", "res://media/audio/sfx/gate_closing.wav")
 	_connectSwitch()
 
 func _process(delta):
@@ -66,12 +66,12 @@ func _process(delta):
 func _on_switch_on():
 	stateSwitched = true
 	state = State.RAISE
-	AudioManager.playSFX("gate_open", false, self, 300)
+	$AudioCtrl.play("gate_open")
 
 func _on_switch_off():
 	stateSwitched = true
 	state = State.LOWER
-	AudioManager.playSFX("gate_close", false, self, 300)
+	$AudioCtrl.play("gate_close")
 
 
 

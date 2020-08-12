@@ -11,7 +11,6 @@ signal switchOff
 var cur_off_timer = 0.0
 
 func _ready():
-	AudioManager.addSFXSample("switch", "res://media/audio/sfx/switch23.wav", self)
 	if on:
 		$AnimatedSprite.animation = "On"
 		cur_off_timer = off_timer
@@ -27,7 +26,7 @@ func _process(delta):
 
 
 func _playAudio():
-	AudioManager.playSFX("switch", false, self, 100)
+	$AudioStream.play()
 
 
 func _on_body_entered(body):

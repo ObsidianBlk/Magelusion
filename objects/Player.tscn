@@ -1,4 +1,4 @@
-[gd_scene load_steps=43 format=2]
+[gd_scene load_steps=44 format=2]
 
 [ext_resource path="res://objects/Player.gd" type="Script" id=1]
 [ext_resource path="res://shaders/Colorizer.shader" type="Shader" id=2]
@@ -10,6 +10,7 @@
 [ext_resource path="res://objects/Sprayer.tscn" type="PackedScene" id=8]
 [ext_resource path="res://objects/fire_particle.tscn" type="PackedScene" id=9]
 [ext_resource path="res://media/graphics/light_mask_002.png" type="Texture" id=10]
+[ext_resource path="res://objects/component/AudioCtrlComponent.tscn" type="PackedScene" id=11]
 
 [sub_resource type="ShaderMaterial" id=1]
 resource_local_to_scene = true
@@ -383,6 +384,9 @@ energy = 0.75
 
 [node name="Tween" type="Tween" parent="Wand/GFX"]
 
+[node name="WandAudio" type="AudioStreamPlayer2D" parent="Wand/GFX"]
+bus = "SFX"
+
 [node name="Player" type="AnimationPlayer" parent="Wand"]
 anims/Fall = SubResource( 26 )
 anims/Idle = SubResource( 27 )
@@ -390,6 +394,9 @@ anims/Jump = SubResource( 28 )
 anims/Move = SubResource( 29 )
 anims/WandIn = SubResource( 30 )
 anims/WandOut = SubResource( 31 )
+
+[node name="WandAudioCtrl" parent="Wand" instance=ExtResource( 11 )]
+audio_player_path = NodePath("../GFX/WandAudio")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 visible = false
@@ -422,3 +429,6 @@ particle_life_min = 8.0
 particle_life_max = 12.0
 strength = 22.0
 angle_variance = 0.025
+
+[node name="PlayerAudio" type="AudioStreamPlayer2D" parent="."]
+bus = "SFX"

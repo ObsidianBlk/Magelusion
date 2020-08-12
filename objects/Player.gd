@@ -96,19 +96,13 @@ func _selectMode(m):
 		_stopCasting()
 
 func _playCastingSound(play:bool = true):
-	var spell = ""
-	match spell_mode:
-		SPELL.FIRE:
-			spell = "fire_spell"
-		SPELL.WATER:
-			spell = "water_spell"
 	if play:
-		AudioManager.playSFX(spell, true)
+		$Wand/WandAudioCtrl.play(SPELL_NAMES[spell_mode])
 	else:
-		AudioManager.stopSFX(spell)
+		$Wand/WandAudioCtrl.stop()
 
 func _startCasting():
-	if caststate == 0:
+	if caststate != 1:
 		caststate = 1
 		$Wand/Player.play("WandOut")
 
@@ -159,9 +153,9 @@ func _handleSpellEffect(enable):
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	# Defining the audio used by the player!
-	AudioManager.addSFXSample("water_spell", "res://media/audio/sfx/fr-water.wav", self)
-	AudioManager.addSFXSample("fire_spell", "res://media/audio/sfx/fire-loop1.wav", self)
+	# Adding the player audio samples...
+	$Wand/WandAudioCtrl.addSample("Fire", "res://media/audio/sfx/fire-loop1.wav")
+	$Wand/WandAudioCtrl.addSample("Water", "res://media/audio/sfx/fr-water.wav")
 	# Now the rest of it all!
 	var n = get_node(particle_container)
 	var npath = n.get_path()
