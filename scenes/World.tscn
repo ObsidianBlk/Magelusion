@@ -25,3 +25,5 @@ particle_container = NodePath("../Map/Particle_Zone")
 [node name="Camera" parent="Transition_Layer" instance=ExtResource( 4 )]
 target_node_path = NodePath("../Transition_Layer/Player")
 lerp_speed = 7.24
+
+[node name="Map_Container" type="Node2D" parent="."]

@@ -14,7 +14,7 @@ const MAX_HURT_TIME = 0.5
 const MAX_INVULNERABLE_TIME = 3.0
 const MAX_USING_TIME = 0.5
 
-export (NodePath) var particle_container
+export (NodePath) var particle_container setget _setParticleContainer
 
 var gravity = 192.08
 var friction = 0.35
@@ -151,12 +151,11 @@ func _handleSpellEffect(enable):
 
 
 
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	# Adding the player audio samples...
-	$Wand/WandAudioCtrl.addSample("Fire", "res://media/audio/sfx/fire-loop1.wav")
-	$Wand/WandAudioCtrl.addSample("Water", "res://media/audio/sfx/fr-water.wav")
-	# Now the rest of it all!
+func _setParticleContainer(pc):
+	particle_container = pc
+	_connectParticleContainer()
+
+func _connectParticleContainer():
 	var n = get_node(particle_container)
 	if n:
 		var npath = n.get_path()
@@ -164,6 +163,14 @@ func _ready():
 		$Sprayer_Water.particle_container = npath
 	else:
 		print("WARNING: Player particle container, '", particle_container, "', not found!")
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	# Adding the player audio samples...
+	$Wand/WandAudioCtrl.addSample("Fire", "res://media/audio/sfx/fire-loop1.wav")
+	$Wand/WandAudioCtrl.addSample("Water", "res://media/audio/sfx/fr-water.wav")
+	# Now the rest of it all!
+	_connectParticleContainer()
 	
 	$ASprite.connect("animation_finished", self, "_on_animation_finished")
 	$Wand/Player.connect("animation_finished", self, "_on_wand_animation_finished")
