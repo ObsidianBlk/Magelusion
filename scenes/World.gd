@@ -26,11 +26,11 @@ func _on_database_changed(name, value):
 
 func _on_MainMenu_Start_pressed():
 	if $"UI/Main Menu".visible:
-		if $"UI/Main Menu/Start".text == "Start":
+		if $"UI/Main Menu/Start/Label".text == "Start":
 			Database.set(GAMESTATE_PAUSED, false)
 			MapLoader.loadMap("res://scenes/Demo_Map.tscn")
 			if _isMapLoaded():
-				$"UI/Main Menu/Start".text = "Resume"
+				$"UI/Main Menu/Start/Label".text = "Resume"
 				$"UI/Main Menu/Background".visible = false
 		else:
 			Database.set(GAMESTATE_PAUSED, false)
