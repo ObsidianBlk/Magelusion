@@ -17,6 +17,16 @@ enum State {REST, LOWER, RAISE}
 var state = State.REST
 var stateSwitched = false
 
+func open():
+	stateSwitched = true
+	state = State.RAISE
+	$AudioCtrl.play("gate_open")
+
+func close():
+	stateSwitched = true
+	state = State.LOWER
+	$AudioCtrl.play("gate_close")
+
 func _setSwitchPath(np):
 	if switch_path != np:
 		if ready:
@@ -64,14 +74,10 @@ func _process(delta):
 			state = State.REST
 
 func _on_switch_on():
-	stateSwitched = true
-	state = State.RAISE
-	$AudioCtrl.play("gate_open")
+	open()
 
 func _on_switch_off():
-	stateSwitched = true
-	state = State.LOWER
-	$AudioCtrl.play("gate_close")
+	close()
 
 
 

@@ -19,6 +19,10 @@ config/name="Magelusion"
 run/main_scene="res://scenes/World.tscn"
 config/icon="res://icon.png"
 
+[autoload]
+
+MapLoader="*res://scenes/Autoloads/MapLoader.gd"
+
 [display]
 
 window/size/width=64

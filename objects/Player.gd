@@ -158,9 +158,12 @@ func _ready():
 	$Wand/WandAudioCtrl.addSample("Water", "res://media/audio/sfx/fr-water.wav")
 	# Now the rest of it all!
 	var n = get_node(particle_container)
-	var npath = n.get_path()
-	$Sprayer_Fire.particle_container = npath
-	$Sprayer_Water.particle_container = npath
+	if n:
+		var npath = n.get_path()
+		$Sprayer_Fire.particle_container = npath
+		$Sprayer_Water.particle_container = npath
+	else:
+		print("WARNING: Player particle container, '", particle_container, "', not found!")
 	
 	$ASprite.connect("animation_finished", self, "_on_animation_finished")
 	$Wand/Player.connect("animation_finished", self, "_on_wand_animation_finished")
