@@ -15,13 +15,13 @@ glow_intensity = 0.95
 
 [sub_resource type="ShaderMaterial" id=6]
 shader = ExtResource( 5 )
-shader_param/seed = 0.0
+shader_param/seed = 99.0
 shader_param/strength = 1.0
-shader_param/color = Color( 0.160784, 0.203922, 0.27451, 1 )
+shader_param/color = Color( 0.211765, 0.00392157, 0.305882, 1 )
 shader_param/octaves = 4
 shader_param/speed = 0.5
-shader_param/scale_a = 5.0
-shader_param/scale_b = 5.0
+shader_param/scale_a = 10.0
+shader_param/scale_b = 10.0
 shader_param/offset = Vector2( 0, 0 )
 
 [node name="World" type="Node2D"]
@@ -31,15 +31,13 @@ script = ExtResource( 3 )
 environment = SubResource( 5 )
 
 [node name="Transition_Layer" type="Node2D" parent="."]
-visible = false
 
 [node name="Player" parent="Transition_Layer" instance=ExtResource( 1 )]
 position = Vector2( 3.81282, 5.85292 )
 particle_container = NodePath("../Map/Particle_Zone")
 
 [node name="Camera" parent="Transition_Layer" instance=ExtResource( 4 )]
-target_node_path = NodePath("../Transition_Layer/Player")
-lerp_speed = 7.24
+fog_color = Color( 1, 1, 1, 1 )
 
 [node name="Map_Container" type="Node2D" parent="."]
 

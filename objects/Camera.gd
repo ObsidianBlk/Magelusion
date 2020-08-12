@@ -2,9 +2,15 @@ extends Camera2D
 
 
 export(NodePath) var target_node_path setget _setTargetNode
+export(Color) var fog_color setget _setFogColor
 export(float, 0.1, 10.0, 0.01) var lerp_speed = 10.0
 
 var target = null
+
+
+func _setFogColor(fc):
+	fog_color = fc
+	$Fog.get_material().set_shader_param("color", fc)
 
 func _setTargetNode(tnp):
 	target = get_node(tnp)
