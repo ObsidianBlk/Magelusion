@@ -178,6 +178,8 @@ func _ready():
 
 
 func _input(event):
+	if Database.get("GAMESTATE_Paused") == true:
+		return
 	if event is InputEventMouseMotion:
 		last_mouse_pos = event.position
 	elif not event.is_echo():
@@ -227,6 +229,9 @@ func _input(event):
 					jumping = true
 
 func _physics_process(delta):
+	if Database.get("GAMESTATE_Paused") == true:
+		return
+
 	if damage > 0.0:
 		damage = 0.0 # TODO: Actually subtract this from some form of life tracker!
 		hurt = true

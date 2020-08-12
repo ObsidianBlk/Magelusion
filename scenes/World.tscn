@@ -1,13 +1,28 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://objects/Player.tscn" type="PackedScene" id=1]
+[ext_resource path="res://media/theme/main_theme.tres" type="Theme" id=2]
 [ext_resource path="res://scenes/World.gd" type="Script" id=3]
 [ext_resource path="res://objects/Camera.tscn" type="PackedScene" id=4]
+[ext_resource path="res://shaders/Fog.shader" type="Shader" id=5]
+[ext_resource path="res://media/graphics/menu/Title.png" type="Texture" id=6]
+[ext_resource path="res://media/graphics/menu/Main_Menu_Frame.png" type="Texture" id=7]
 
 [sub_resource type="Environment" id=5]
 background_mode = 4
 glow_enabled = true
 glow_intensity = 0.95
+
+[sub_resource type="ShaderMaterial" id=6]
+shader = ExtResource( 5 )
+shader_param/seed = 0.0
+shader_param/strength = 1.0
+shader_param/color = Color( 0.160784, 0.203922, 0.27451, 1 )
+shader_param/octaves = 4
+shader_param/speed = 0.5
+shader_param/scale_a = 5.0
+shader_param/scale_b = 5.0
+shader_param/offset = Vector2( 0, 0 )
 
 [node name="World" type="Node2D"]
 script = ExtResource( 3 )
@@ -27,3 +42,84 @@ target_node_path = NodePath("../Transition_Layer/Player")
 lerp_speed = 7.24
 
 [node name="Map_Container" type="Node2D" parent="."]
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="Main Menu" type="Control" parent="UI"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+focus_neighbour_top = NodePath("Start")
+focus_neighbour_bottom = NodePath("Start")
+focus_next = NodePath("Start")
+focus_previous = NodePath("Start")
+focus_mode = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Background" type="Control" parent="UI/Main Menu"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Background_Color" type="ColorRect" parent="UI/Main Menu/Background"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0, 0, 0, 1 )
+
+[node name="Fog" type="ColorRect" parent="UI/Main Menu/Background"]
+material = SubResource( 6 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="BGFrame" type="TextureRect" parent="UI/Main Menu/Background"]
+margin_right = 40.0
+margin_bottom = 40.0
+texture = ExtResource( 7 )
+
+[node name="Title" type="TextureRect" parent="UI/Main Menu/Background"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -24.0
+margin_top = 5.0
+margin_right = 24.0
+texture = ExtResource( 6 )
+stretch_mode = 6
+
+[node name="Start" type="Button" parent="UI/Main Menu"]
+margin_top = 32.0
+margin_right = 64.0
+margin_bottom = 40.0
+focus_neighbour_top = NodePath("../Quit")
+focus_neighbour_bottom = NodePath("../Quit")
+focus_next = NodePath("../Quit")
+focus_previous = NodePath("../Quit")
+theme = ExtResource( 2 )
+custom_colors/font_color = Color( 0.564706, 0.533333, 0.270588, 1 )
+custom_colors/font_color_hover = Color( 1, 0.945098, 0.494118, 1 )
+custom_colors/font_color_pressed = Color( 1, 0.494118, 0, 1 )
+text = "Start"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Quit" type="Button" parent="UI/Main Menu"]
+margin_top = 48.0
+margin_right = 64.0
+margin_bottom = 56.0
+focus_neighbour_top = NodePath("../Start")
+focus_neighbour_bottom = NodePath("../Start")
+focus_next = NodePath("../Start")
+focus_previous = NodePath("../Start")
+theme = ExtResource( 2 )
+custom_colors/font_color = Color( 0.564706, 0.533333, 0.270588, 1 )
+custom_colors/font_color_hover = Color( 1, 0.945098, 0.494118, 1 )
+custom_colors/font_color_pressed = Color( 1, 0.494118, 0, 1 )
+text = "Quit"
+[connection signal="pressed" from="UI/Main Menu/Start" to="." method="_on_MainMenu_Start_pressed"]
+[connection signal="pressed" from="UI/Main Menu/Quit" to="." method="_on_MainMenu_Quit_pressed"]

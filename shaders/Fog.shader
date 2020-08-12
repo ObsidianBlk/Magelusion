@@ -6,7 +6,7 @@ render_mode blend_add, unshaded;
 
 uniform float seed = 0.0;
 uniform float strength = 1.0;
-uniform vec3 color = vec3(1.0, 1.0, 1.0);
+uniform vec4 color : hint_color = vec4(1.0, 1.0, 1.0, 1.0);
 uniform int octaves = 4;
 uniform float speed = 0.5;
 uniform float scale_a = 20.0;
@@ -53,5 +53,5 @@ float fbm(vec2 coord){
 void fragment(){
 	vec2 coord = (UV + offset);
 	float motion = fbm((coord*scale_b) + fbm((coord*scale_a) + (TIME * speed)));
-	COLOR = vec4(color, motion * strength);
+	COLOR = vec4(color.rgb, motion * strength);
 }
