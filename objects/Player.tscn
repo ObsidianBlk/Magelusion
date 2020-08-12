@@ -344,7 +344,8 @@ height = 2.0
 [node name="Player" type="KinematicBody2D" groups=[
 "Player",
 ]]
-collision_mask = 3
+collision_layer = 512
+collision_mask = 7439
 script = ExtResource( 1 )
 
 [node name="ASprite" type="AnimatedSprite" parent="."]

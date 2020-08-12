@@ -16,6 +16,9 @@ export (float) var falloff_distance = 0.0 setget _setFalloff
 var ready = false
 var player = null
 
+onready var collision_masks = $Area2D.collision_mask
+onready var collision_layer = $Area2D.collision_layer
+
 func _setForce(f):
 	force = f
 	_updateInnerNodes()
@@ -56,8 +59,10 @@ func _setSwitchPath(np):
 func _updateInnerNodes():
 	if ready:
 		if enabled:
-			$Area2D.set_collision_layer_bit(0, true)
-			$Area2D.set_collision_mask_bit(0, true)
+			$Area2D.collision_layer = collision_layer
+			$Area2D.collision_mask = collision_masks
+			#$Area2D.set_collision_layer_bit(0, true)
+			#$Area2D.set_collision_mask_bit(0, true)
 			$Particles2D.emitting = true
 			
 			$Area2D/CollisionShape2D.shape.extents = Vector2(width * 0.5, height * 0.5)
@@ -70,8 +75,10 @@ func _updateInnerNodes():
 			$Area2D.gravity = force
 			$Area2D.gravity_vec = gv
 		else:
-			$Area2D.set_collision_layer_bit(0, false)
-			$Area2D.set_collision_mask_bit(0, false)
+			$Area2D.collision_layer = 0
+			$Area2D.collision_mask = 0
+			#$Area2D.set_collision_layer_bit(0, false)
+			#$Area2D.set_collision_mask_bit(0, false)
 			$Particles2D.emitting = false
 			player = null
 
@@ -114,13 +121,11 @@ func _process(delta):
 
 func _on_body_entered(body):
 	if body.is_in_group("Player") and body.has_method("push"):
-		print("IN")
 		player = body
 
 
 func _on_body_exited(body):
 	if body == player:
-		print("Out")
 		player = null
 
 func _on_switch_on():

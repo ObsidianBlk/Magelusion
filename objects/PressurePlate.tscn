@@ -32,6 +32,7 @@ extents = Vector2( 4, 1.5 )
 extents = Vector2( 5, 3 )
 
 [node name="PressurePlate" type="StaticBody2D"]
+collision_mask = 15887
 script = ExtResource( 2 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
@@ -44,6 +45,8 @@ position = Vector2( 0, 2.5 )
 shape = SubResource( 4 )
 
 [node name="Area2D" type="Area2D" parent="."]
+collision_layer = 256
+collision_mask = 10760
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
 shape = SubResource( 5 )

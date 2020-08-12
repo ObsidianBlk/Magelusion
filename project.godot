@@ -84,6 +84,19 @@ p1_cast={
  ]
 }
 
+[layer_names]
+
+2d_physics/layer_1="Walls"
+2d_physics/layer_2="Platforms"
+2d_physics/layer_3="Pushables"
+2d_physics/layer_4="Enemies"
+2d_physics/layer_9="Triggers"
+2d_physics/layer_10="Player"
+2d_physics/layer_11="Fire Particles"
+2d_physics/layer_12="Water Particles"
+2d_physics/layer_13="Steam Particles"
+2d_physics/layer_14="Blood Particles"
+
 [physics]
 
 2d/thread_model=2
