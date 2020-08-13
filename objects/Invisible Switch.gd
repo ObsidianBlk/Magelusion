@@ -164,17 +164,15 @@ func _on_body_exited(body):
 	if group != "":
 		if _removeBody(group, body):
 			if not _isTriggered() and triggered:
+				triggered = false
 				emit_signal("switchOff")
 
 
 func _on_fire_lit(fire):
-	print("Fire Lit!")
 	var fi = _getFireIndex(fire)
-	print("Fire Index: ", fi)
 	if fi >= 0:
 		fires[fi].lit = true
 		if _allFiresLit():
-			print("Emitting Switch On Due to Fires!")
 			emit_signal("switchOn")
 		
 

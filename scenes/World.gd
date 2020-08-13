@@ -11,6 +11,7 @@ func _isMapLoaded():
 func _ready():
 	Database.set(GAMESTATE_PAUSED, true)
 	Database.connect("valueChanged", self, "_on_database_changed")
+	$"UI/Main Menu".visible = true
 
 func _input(event):
 	if event.is_action_pressed("ui_cancel"):

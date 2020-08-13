@@ -1,0 +1,16 @@
+{
+  "color":{
+    "r":1.0,
+    "g":0.5,
+    "b":0.0
+  },
+  "lines":[
+    "Hello there player!",
+    "This is a dialog!",
+    "I know it scary...",
+    "But you'll get survive...",
+    "I trust in you!",
+    "See?",
+    "All done now!"
+  ]
+}

@@ -1,7 +1,8 @@
-[gd_scene load_steps=16 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://objects/SpellOrb.tscn" type="PackedScene" id=1]
 [ext_resource path="res://shaders/Colorizer.shader" type="Shader" id=2]
+[ext_resource path="res://objects/DialogTrigger.tscn" type="PackedScene" id=3]
 [ext_resource path="res://objects/Spike_collision.gd" type="Script" id=8]
 [ext_resource path="res://objects/Invisible Switch.tscn" type="PackedScene" id=9]
 [ext_resource path="res://scenes/Tilesets/Brick_Tileset.tres" type="TileSet" id=10]
@@ -182,6 +183,11 @@ position = Vector2( 100, 74 )
 on = true
 off_timer = 5.0
 
+[node name="Dialog_Trigger" parent="Switches" instance=ExtResource( 9 )]
+position = Vector2( 34, 12 )
+trigger_groups = [ "Player" ]
+trigger_count = [ 1 ]
+
 [node name="SpellOrbs" type="Node2D" parent="."]
 
 [node name="SpellLight" parent="SpellOrbs" instance=ExtResource( 1 )]
@@ -226,3 +232,10 @@ position = Vector2( 4, 9 )
 [node name="PlatformSwitch" parent="." instance=ExtResource( 9 )]
 position = Vector2( 94.4504, 52.4126 )
 fire_triggers = [ NodePath("../Fires/Fire3"), NodePath("../Fires/Fire5") ]
+
+[node name="Dialogs" type="Node2D" parent="."]
+
+[node name="DialogTrigger" parent="Dialogs" instance=ExtResource( 3 )]
+switch_path = NodePath("../../Switches/Dialog_Trigger")
+dialog_src = "res://data/dialogs/test_dialog.json"
+repeatable = true
