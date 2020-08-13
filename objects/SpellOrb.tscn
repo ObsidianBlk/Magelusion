@@ -1,0 +1,37 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://shaders/Colorizer.shader" type="Shader" id=1]
+[ext_resource path="res://media/graphics/light_mask_002.png" type="Texture" id=2]
+[ext_resource path="res://media/graphics/items.png" type="Texture" id=3]
+[ext_resource path="res://objects/SpellOrb.gd" type="Script" id=4]
+
+[sub_resource type="ShaderMaterial" id=3]
+resource_local_to_scene = true
+shader = ExtResource( 1 )
+shader_param/AUTO_REPLACE = true
+shader_param/IGNORE_ALPHA = false
+shader_param/COLOR_A = Color( 1, 1, 1, 1 )
+shader_param/COLOR_A_REPLACEMENT = Color( 1, 1, 1, 1 )
+shader_param/COLOR_B = Color( 0, 0, 0, 1 )
+shader_param/COLOR_B_REPLACEMENT = Color( 0, 0, 0, 1 )
+
+[sub_resource type="CircleShape2D" id=2]
+radius = 2.0
+
+[node name="SpellOrb" type="Area2D"]
+script = ExtResource( 4 )
+
+[node name="Sprite" type="Sprite" parent="."]
+material = SubResource( 3 )
+texture = ExtResource( 3 )
+region_enabled = true
+region_rect = Rect2( 5, 0, 3, 3 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource( 2 )
+
+[node name="Light2D" type="Light2D" parent="."]
+texture = ExtResource( 2 )
+texture_scale = 0.2
+energy = 0.5
+[connection signal="body_entered" from="." to="." method="_on_SpellOrb_body_entered"]

@@ -2,11 +2,17 @@ extends KinematicBody2D
 
 const PLATFORM_BIT = 1
 
-const COLOR_NO_SPELL = Color(1.0, 1.0, 1.0, 1.0)
-const COLOR_LIGHT_SPELL = Color(1.0, 1.0, 0.0, 1.0)
-const COLOR_FIRE_SPELL = Color(1.0, 0.0, 0.25, 1.0)
-const COLOR_WATER_SPELL = Color(0.0, 0.25, 1.0, 1.0)
-const SPELL_NAMES = ["None", "Light", "Fire", "Water"]
+const SPELL_INFO = [
+	{"name":"None", "color": Color(1.0, 1.0, 1.0, 1.0)},
+	{"name":"Light", "color": Color(1.0, 1.0, 0.0, 1.0)},
+	{"name":"Fire", "color": Color(1.0, 0.0, 0.25, 1.0)},
+	{"name":"Water", "color": Color(0.0, 0.25, 1.0, 1.0)}
+]
+#const COLOR_NO_SPELL = Color(1.0, 1.0, 1.0, 1.0)
+#const COLOR_LIGHT_SPELL = Color(1.0, 1.0, 0.0, 1.0)
+#const COLOR_FIRE_SPELL = Color(1.0, 0.0, 0.25, 1.0)
+#const COLOR_WATER_SPELL = Color(0.0, 0.25, 1.0, 1.0)
+#const SPELL_NAMES = ["None", "Light", "Fire", "Water"]
 const WAND_LIGHT_SCALE_MIN = 0.2
 const WAND_LIGHT_SCALE_MAX = 1.0
 
@@ -43,6 +49,7 @@ var idle_time = 0.0
 var idle_breath_time = rand_range(1.0, 4.0)
 
 enum SPELL {NONE=0, LIGHT=1, FIRE=2, WATER=3}
+var spell_available = [true, false, false, false]
 var spell_mode = SPELL.NONE
 
 var print_delay = 1.0
@@ -62,42 +69,58 @@ func _setWandColor(c):
 	$Wand/GFX/Bauble.get_material().set_shader_param("COLOR_A_REPLACEMENT", c)
 
 func _scrollMode(dir):
-	if dir != 0:
-		var cm = spell_mode + dir
-		if cm < 0:
-			_selectMode(SPELL.WATER)
-		elif cm > SPELL.WATER:
-			_selectMode(SPELL.NONE)
-		else:
-			_selectMode(cm)
+	var cm = spell_mode
+	if dir > 0:
+		cm = _nextAvailableSpell()
+	elif dir < 0:
+		cm = _prevAvailableSpell()
+	if cm != spell_mode:
+		_selectMode(cm)
 
+func _nextAvailableSpell():
+	var c = spell_mode + 1
+	while c <= SPELL.WATER:
+		if spell_available[c]:
+			return c
+		c = c + 1
+	c = 0
+	while c < spell_mode:
+		if spell_available[c]:
+			return c
+		c = c + 1
+	return spell_mode
+
+func _prevAvailableSpell():
+	var c = spell_mode - 1
+	while c >= 0:
+		if spell_available[c]:
+			return c
+		c = c - 1
+	c = SPELL.WATER
+	while c > spell_mode:
+		if spell_available[c]:
+			return c
+		c = c - 1
+	return spell_mode
 
 func _selectMode(m):
 	var osm = spell_mode
 	spell_mode = m
-	match m:
-		SPELL.NONE:
-			$Wand/GFX/Light2D.enabled = false
-			_setWandColor(COLOR_NO_SPELL)
-		SPELL.LIGHT:
-			$Wand/GFX/Light2D.color = COLOR_LIGHT_SPELL
-			$Wand/GFX/Light2D.enabled = true
-			_setWandColor(COLOR_LIGHT_SPELL)
-		SPELL.FIRE:
-			$Wand/GFX/Light2D.color = COLOR_FIRE_SPELL
-			$Wand/GFX/Light2D.enabled = true
-			_setWandColor(COLOR_FIRE_SPELL)
-		SPELL.WATER:
-			$Wand/GFX/Light2D.color = COLOR_WATER_SPELL
-			$Wand/GFX/Light2D.enabled = true
-			_setWandColor(COLOR_WATER_SPELL)
+	var color = SPELL_INFO[spell_mode].color
+	if spell_mode == SPELL.NONE:
+		$Wand/GFX/Light2D.enabled = false
+		_setWandColor(color)
+	else:
+		$Wand/GFX/Light2D.color = color
+		$Wand/GFX/Light2D.enabled = true
+		_setWandColor(color)
 	
 	if spell_mode != osm:
 		_stopCasting()
 
 func _playCastingSound(play:bool = true):
 	if play:
-		$Wand/WandAudioCtrl.play(SPELL_NAMES[spell_mode])
+		$Wand/WandAudioCtrl.play(SPELL_INFO[spell_mode].name)
 	else:
 		$Wand/WandAudioCtrl.stop()
 
@@ -127,10 +150,10 @@ func _handleSpellEffect(enable):
 				$Wand/GFX/Tween.start()
 			SPELL.FIRE:
 				_playCastingSound()
-				emit_signal("sprayStart", SPELL_NAMES[spell_mode], $Wand/GFX/SprayPoint.global_position, $Wand.scale)
+				emit_signal("sprayStart", SPELL_INFO[spell_mode].name, $Wand/GFX/SprayPoint.global_position, $Wand.scale)
 			SPELL.WATER:
 				_playCastingSound()
-				emit_signal("sprayStart", SPELL_NAMES[spell_mode], $Wand/GFX/SprayPoint.global_position, $Wand.scale)
+				emit_signal("sprayStart", SPELL_INFO[spell_mode].name, $Wand/GFX/SprayPoint.global_position, $Wand.scale)
 	else:
 		match spell_mode:
 			SPELL.NONE:
@@ -169,6 +192,10 @@ func _ready():
 	# Adding the player audio samples...
 	$Wand/WandAudioCtrl.addSample("Fire", "res://media/audio/sfx/fire-loop1.wav")
 	$Wand/WandAudioCtrl.addSample("Water", "res://media/audio/sfx/fr-water.wav")
+	
+	# Connecting to the game database to watch for special variables...
+	Database.connect("valueChanged", self, "_on_db_change")
+	
 	# Now the rest of it all!
 	_connectParticleContainer()
 	
@@ -200,11 +227,11 @@ func _input(event):
 			set_collision_mask_bit(PLATFORM_BIT, true)
 		
 		if caststate == 0:
-			if event.is_action_pressed("p1_select_fire"):
+			if event.is_action_pressed("p1_select_fire") and spell_available[SPELL.FIRE]:
 				_selectMode(SPELL.FIRE)
-			elif event.is_action_pressed("p1_select_water"):
+			elif event.is_action_pressed("p1_select_water") and spell_available[SPELL.WATER]:
 				_selectMode(SPELL.WATER)
-			elif event.is_action_pressed("p1_select_light"):
+			elif event.is_action_pressed("p1_select_light") and spell_available[SPELL.LIGHT]:
 				_selectMode(SPELL.LIGHT)
 			elif event.is_action_pressed("p1_next_spell"):
 				_scrollMode(1)
@@ -346,6 +373,33 @@ func _on_wand_animation_finished(anim):
 			$Wand/Player.play("Idle")
 		if $ASprite.animation != "Hurt":
 			$Wand/Player.play($ASprite.animation)
+
+func _on_db_change(name, val):
+	match name:
+		"PLAYER_SPELL_Light":
+			if val == true:
+				spell_available[SPELL.LIGHT] = true
+				_selectMode(SPELL.LIGHT)
+			else:
+				spell_available[SPELL.LIGHT] = false
+				if spell_mode == SPELL.LIGHT:
+					_selectMode(SPELL.NONE)
+		"PLAYER_SPELL_Fire":
+			if val == true:
+				spell_available[SPELL.FIRE] = true
+				_selectMode(SPELL.FIRE)
+			else:
+				spell_available[SPELL.FIRE] = false
+				if spell_mode == SPELL.FIRE:
+					_selectMode(SPELL.NONE)
+		"PLAYER_SPELL_Water":
+			if val == true:
+				spell_available[SPELL.WATER] = true
+				_selectMode(SPELL.WATER)
+			else:
+				spell_available[SPELL.WATER] = false
+				if spell_mode == SPELL.WATER:
+					_selectMode(SPELL.NONE)
 
 
 func takeDamage(amount):

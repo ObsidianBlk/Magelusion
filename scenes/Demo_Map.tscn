@@ -1,5 +1,6 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=16 format=2]
 
+[ext_resource path="res://objects/SpellOrb.tscn" type="PackedScene" id=1]
 [ext_resource path="res://shaders/Colorizer.shader" type="Shader" id=2]
 [ext_resource path="res://objects/Spike_collision.gd" type="Script" id=8]
 [ext_resource path="res://objects/Invisible Switch.tscn" type="PackedScene" id=9]
@@ -140,6 +141,8 @@ position = Vector2( 80, 32 )
 
 [node name="Platform2" parent="." instance=ExtResource( 16 )]
 position = Vector2( 80, 56 )
+switch_path = NodePath("../PlatformSwitch")
+out = false
 
 [node name="Spike_collision" type="Area2D" parent="."]
 position = Vector2( 48, 94 )
@@ -179,6 +182,28 @@ position = Vector2( 100, 74 )
 on = true
 off_timer = 5.0
 
+[node name="SpellOrbs" type="Node2D" parent="."]
+
+[node name="SpellLight" parent="SpellOrbs" instance=ExtResource( 1 )]
+position = Vector2( 28, 62 )
+color = Color( 0.847059, 0.756863, 0.0745098, 1 )
+spell_name = "Light"
+
+[node name="SpellFire" parent="SpellOrbs" instance=ExtResource( 1 )]
+position = Vector2( 108, 30 )
+color = Color( 0.976471, 0.117647, 0.0313726, 1 )
+spell_name = "Fire"
+
+[node name="SpellFire2" parent="SpellOrbs" instance=ExtResource( 1 )]
+position = Vector2( 52, 74 )
+color = Color( 0.976471, 0.117647, 0.0313726, 1 )
+spell_name = "Fire"
+
+[node name="SpellWater" parent="SpellOrbs" instance=ExtResource( 1 )]
+position = Vector2( 164, 78 )
+color = Color( 0.0313726, 0.266667, 0.976471, 1 )
+spell_name = "Water"
+
 [node name="Player_Layer" type="Node2D" parent="."]
 
 [node name="Particle_Container" type="Node2D" parent="."]
@@ -197,3 +222,7 @@ color = Color( 0.0352941, 0.0352941, 0.0352941, 1 )
 
 [node name="Player_Start" type="Position2D" parent="."]
 position = Vector2( 4, 9 )
+
+[node name="PlatformSwitch" parent="." instance=ExtResource( 9 )]
+position = Vector2( 94.4504, 52.4126 )
+fire_triggers = [ NodePath("../Fires/Fire3"), NodePath("../Fires/Fire5") ]
