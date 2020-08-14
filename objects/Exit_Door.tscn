@@ -1,0 +1,118 @@
+[gd_scene load_steps=18 format=2]
+
+[ext_resource path="res://media/graphics/items.png" type="Texture" id=1]
+[ext_resource path="res://objects/Exit_Door.gd" type="Script" id=2]
+[ext_resource path="res://shaders/Colorizer.shader" type="Shader" id=3]
+
+[sub_resource type="ShaderMaterial" id=13]
+resource_local_to_scene = true
+shader = ExtResource( 3 )
+shader_param/AUTO_REPLACE = false
+shader_param/IGNORE_ALPHA = false
+shader_param/COLOR_A = Color( 1, 1, 1, 1 )
+shader_param/COLOR_A_REPLACEMENT = Color( 1, 1, 1, 1 )
+shader_param/COLOR_B = Color( 0, 0, 0, 1 )
+shader_param/COLOR_B_REPLACEMENT = Color( 0, 0, 0, 1 )
+
+[sub_resource type="AtlasTexture" id=1]
+atlas = ExtResource( 1 )
+region = Rect2( 0, 16, 8, 16 )
+
+[sub_resource type="AtlasTexture" id=2]
+atlas = ExtResource( 1 )
+region = Rect2( 24, 16, 8, 16 )
+
+[sub_resource type="AtlasTexture" id=3]
+atlas = ExtResource( 1 )
+region = Rect2( 16, 16, 8, 16 )
+
+[sub_resource type="AtlasTexture" id=4]
+atlas = ExtResource( 1 )
+region = Rect2( 8, 16, 8, 16 )
+
+[sub_resource type="AtlasTexture" id=5]
+atlas = ExtResource( 1 )
+region = Rect2( 0, 16, 8, 16 )
+
+[sub_resource type="AtlasTexture" id=6]
+atlas = ExtResource( 1 )
+region = Rect2( 24, 16, 8, 16 )
+
+[sub_resource type="AtlasTexture" id=7]
+atlas = ExtResource( 1 )
+region = Rect2( 0, 16, 8, 16 )
+
+[sub_resource type="AtlasTexture" id=8]
+atlas = ExtResource( 1 )
+region = Rect2( 8, 16, 8, 16 )
+
+[sub_resource type="AtlasTexture" id=9]
+atlas = ExtResource( 1 )
+region = Rect2( 16, 16, 8, 16 )
+
+[sub_resource type="AtlasTexture" id=10]
+atlas = ExtResource( 1 )
+region = Rect2( 24, 16, 8, 16 )
+
+[sub_resource type="SpriteFrames" id=11]
+animations = [ {
+"frames": [ SubResource( 1 ) ],
+"loop": true,
+"name": "Closed",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 2 ), SubResource( 3 ), SubResource( 4 ), SubResource( 5 ) ],
+"loop": true,
+"name": "Closing",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 6 ) ],
+"loop": true,
+"name": "Open",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 7 ), SubResource( 8 ), SubResource( 9 ), SubResource( 10 ) ],
+"loop": true,
+"name": "Opening",
+"speed": 5.0
+} ]
+
+[sub_resource type="ShaderMaterial" id=14]
+resource_local_to_scene = true
+shader = ExtResource( 3 )
+shader_param/AUTO_REPLACE = false
+shader_param/IGNORE_ALPHA = false
+shader_param/COLOR_A = Color( 1, 1, 1, 1 )
+shader_param/COLOR_A_REPLACEMENT = Color( 1, 1, 1, 1 )
+shader_param/COLOR_B = Color( 0, 0, 0, 1 )
+shader_param/COLOR_B_REPLACEMENT = Color( 0, 0, 0, 1 )
+
+[sub_resource type="RectangleShape2D" id=12]
+extents = Vector2( 4, 6 )
+
+[node name="Exit_Door" type="Node2D"]
+script = ExtResource( 2 )
+
+[node name="DoorLeft" type="AnimatedSprite" parent="."]
+material = SubResource( 13 )
+position = Vector2( -4, 0 )
+frames = SubResource( 11 )
+animation = "Closed"
+playing = true
+
+[node name="DoorRight" type="AnimatedSprite" parent="."]
+material = SubResource( 14 )
+position = Vector2( 4, 0 )
+scale = Vector2( -1, 1 )
+frames = SubResource( 11 )
+animation = "Closed"
+playing = true
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2( 0, 2 )
+shape = SubResource( 12 )
+[connection signal="animation_finished" from="DoorLeft" to="." method="_on_animation_finished"]
+[connection signal="body_entered" from="Area2D" to="." method="_on_body_entered"]
+[connection signal="body_exited" from="Area2D" to="." method="_on_body_exited"]

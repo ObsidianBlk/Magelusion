@@ -2,6 +2,8 @@ extends Node2D
 
 const GAMESTATE_PAUSED = "GAMESTATE_Paused"
 
+export(String) var initial_map = "res://scenes/Demo_Map.tscn"
+
 onready var camera = $Transition_Layer/Camera
 
 
@@ -29,7 +31,7 @@ func _on_MainMenu_Start_pressed():
 	if $"UI/Main Menu".visible:
 		if $"UI/Main Menu/Start/Label".text == "Start":
 			Database.set(GAMESTATE_PAUSED, false)
-			MapLoader.loadMap("res://scenes/Demo_Map.tscn")
+			MapLoader.loadMap(initial_map)
 			if _isMapLoaded():
 				$"UI/Main Menu/Start/Label".text = "Resume"
 				$"UI/Main Menu/Background".visible = false

@@ -5,6 +5,7 @@ const SWITCH_ON_SIGNAL = "switchOn"
 const SWITCH_OFF_SIGNAL = "switchOff"
 
 export (NodePath) var switch_path = "" setget _setSwitchPath
+export (bool) var switch_inverted = false
 export (bool) var out = true setget _setOut
 
 var ready = false
@@ -59,14 +60,13 @@ func _ready():
 
 
 func _on_switch_on():
-	_setOut(true)
+	_setOut(!switch_inverted)
 
 func _on_switch_off():
-	_setOut(false)
+	_setOut(switch_inverted)
 
 
 func _on_tween_all_completed():
 	if out:
-		print("Modulate Value: ", $Sprite.modulate.a)
 		collision_layer = enabled_collision_layer
 		collision_mask = enabled_collision_mask

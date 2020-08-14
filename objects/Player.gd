@@ -258,7 +258,11 @@ func _input(event):
 
 func _physics_process(delta):
 	if Database.get("GAMESTATE_Paused") == true or Database.get("GAMESTATE_Dialog") == true:
-		return
+		if Database.get("GAMESTATE_Dialog") == true:
+			left_down = false
+			right_down = false
+			down_down = false
+			motion = Vector2.ZERO
 
 	if damage > 0.0:
 		damage = 0.0 # TODO: Actually subtract this from some form of life tracker!

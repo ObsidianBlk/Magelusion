@@ -19,6 +19,9 @@ func clearMap():
 	if children.size() > 0:
 		var mapNode = children[0]
 		
+		mapNode.disconnect("next_level", self, "_on_next_level")
+		mapNode.disconnect("win_game", self, "_on_win_game")
+		
 		if mapNode.has_node("Player_Layer") and mapNode.has_node("Camera_Layer"):
 			if mapNode.has_node("Player_Layer/Player"):
 				var player = mapNode.get_node("Player_Layer/Player")
@@ -67,6 +70,7 @@ func loadMap(path : String):
 			else:
 				player.particle_container = mapNode.get_path()
 			
+			_connectMapSignals(mapNode)
 			return true
 		else:
 			print ("WARNING: Failed to load map. Missing required node.")
@@ -74,6 +78,25 @@ func loadMap(path : String):
 		print("WARNING: Failed to load map '", path, "'.")
 	
 	return false
+
+
+func _connectMapSignals(map : Node2D):
+	var foundWayOut = false
+	for sig in map.get_signal_list():
+		if sig["name"] == "next_level":
+			map.connect("next_level", self, "_on_next_level")
+			foundWayOut = true
+		elif sig["name"] == "win_game":
+			map.connect("win_game", self, "_on_win_game")
+			foundWayOut = true
+	if not foundWayOut:
+		print("WARNING: Map has no way out!! You stuck bro!!")
+
+func _on_next_level(next):
+	loadMap(next)
+
+func _on_win_game():
+	pass
 
 
 

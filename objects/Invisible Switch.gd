@@ -8,6 +8,7 @@ export(Array, String) var trigger_groups
 export(Array, int) var trigger_count
 export(Array, NodePath) var fire_triggers setget _setFireTriggers
 export(bool) var single_trigger = false
+export(bool) var invert_trigger = false
 
 signal switchOn
 signal switchOff
@@ -143,6 +144,18 @@ func _getTriggerGroup(obj : Node2D):
 	return ""
 
 
+func _emitSwitch(on = true):
+	if invert_trigger:
+		if on:
+			emit_signal("switchOff")
+		else:
+			emit_signal("switchOn")
+	else:
+		if on:
+			emit_signal("switchOn")
+		else:
+			emit_signal("switchOff")
+
 func _on_body_entered(body):
 	if no_trigger:
 		return
@@ -154,7 +167,7 @@ func _on_body_entered(body):
 			_addBody(group, body)
 			if _isTriggered() and not triggered:
 				triggered = true
-				emit_signal("switchOn")
+				_emitSwitch()
 				if single_trigger:
 					no_trigger = true
 
@@ -165,7 +178,7 @@ func _on_body_exited(body):
 		if _removeBody(group, body):
 			if not _isTriggered() and triggered:
 				triggered = false
-				emit_signal("switchOff")
+				_emitSwitch(false)
 
 
 func _on_fire_lit(fire):
@@ -173,7 +186,7 @@ func _on_fire_lit(fire):
 	if fi >= 0:
 		fires[fi].lit = true
 		if _allFiresLit():
-			emit_signal("switchOn")
+			_emitSwitch()
 		
 
 func _on_fire_unlit(fire):
@@ -182,7 +195,7 @@ func _on_fire_unlit(fire):
 		var all_lit = _allFiresLit()
 		fires[fi].lit = false
 		if all_lit:
-			emit_signal("switchOff")
+			_emitSwitch(false)
 
 
 

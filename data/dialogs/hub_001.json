@@ -1,0 +1,34 @@
+{
+  "color":{
+    "r":1.0,
+    "g":0.5,
+    "b":0.0
+  },
+  "lines":[
+    "Well hello there Mage",
+    "You seem to be trapped in a cell.",
+    "That is an aweful shame.",
+    "...",
+    "And without your magics too!",
+    "How so very very unfortunate!",
+    "Not much magics around here.",
+    "Maybe a little. But...",
+    "Certinly none in this cell!",
+    "You'll have to escape. But,",
+    "Without any magic, how could you?",
+    "...",
+    "I could help you out, I suppose.",
+    "Would you like me to help you?",
+    {"switch":true, "text":"There you go, Mage! A way out."},
+    "...",
+    "It's not that simple though.",
+    "For this dungeon is dark...",
+    "and full of terrors!",
+    "Ok, I stoll that last bit,",
+    "but it is dark! Lots of traps",
+    "And puzzles to solve.",
+    "And, if you're lucky, maybe...",
+    "just maybe...",
+    "I'll help you some more!"
+  ]
+}

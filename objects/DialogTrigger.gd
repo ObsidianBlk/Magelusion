@@ -7,6 +7,7 @@ const DB_VAR = "GAMESTATE_Dialog"
 
 export (NodePath) var switch_path = "" setget _setSwitchPath
 export(String) var dialog_src = ""
+export(float) var auto_start_time = 0.0
 export(float, 0.0, 5.0) var display_time = 1.0
 export(bool) var repeatable = false
 
@@ -21,6 +22,8 @@ var dialog_data = null
 var dialog_line = 0
 var dialog_display_time = 0.0
 
+signal switchOn
+signal switchOff
 
 func _setSwitchPath(np):
 	if switch_path != np:
@@ -68,7 +71,23 @@ func _updateDialogPercentage():
 
 func _setDialogLine(n):
 	if dialog_data.lines.size() > n:
-		dialog_node.get_node("Label").text = dialog_data.lines[n]
+		var type = typeof(dialog_data.lines[n])
+		var line = ""
+		if type == TYPE_DICTIONARY:
+			if not ("text" in dialog_data.lines[n]):
+				return false
+			line = dialog_data.lines[n].text
+			if "switch" in dialog_data.lines[n]:
+				if dialog_data.lines[n].switch == true:
+					emit_signal("switchOn")
+				elif dialog_data.lines[n].switch == false:
+					emit_signal("switchOff")
+		elif type == TYPE_STRING:
+			line = dialog_data.lines[n]
+		else:
+			return false
+
+		dialog_node.get_node("Label").text = line
 		dialog_node.get_node("Label").percent_visible = 0.0
 		dialog_display_time = 0.0
 		return true
@@ -121,6 +140,11 @@ func _input(event):
 
 
 func _process(delta):
+	if auto_start_time > 0:
+		auto_start_time -= delta
+		if auto_start_time <= 0.0:
+			_on_switch_on()
+
 	if dialog_node.visible:
 		if dialog_display_time < display_time:
 			dialog_display_time += delta
