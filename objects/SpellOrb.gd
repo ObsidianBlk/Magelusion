@@ -4,6 +4,8 @@ extends Area2D
 export(Color) var color = Color(1.0, 1.0, 1.0, 1.0)
 export(String) var spell_name = ""
 
+signal switchOn
+
 
 func _ready():
 	$Sprite.get_material().set_shader_param("COLOR_A_REPLACEMENT", color)
@@ -18,3 +20,4 @@ func _on_SpellOrb_body_entered(body):
 		if canget:
 			Database.set("PLAYER_SPELL_" + spell_name, true)
 			queue_free()
+			emit_signal("switchOn")

@@ -64,17 +64,19 @@ func _on_body_exited(body):
 
 
 func _on_activate():
+	if next_level_src == "" and not win_game:
+		return # This becomes a static object if there's nothing to do :)
+		
 	if $DoorLeft.animation == "Closed":
 		if db_key_name == "" or Database.get(db_key_name) == true:
 			$DoorLeft.play("Opening")
 			$DoorRight.play("Opening")
 	elif $DoorLeft.animation == "Open":
-		if next_level_src != "":
+		if next_level_src != "" or win_game:
 			_disconnectAllBodies()
 			if win_game:
 				emit_signal("win_game")
 			else:
-				print("Emitting next level")
 				emit_signal("level_exit", next_level_src)
 
 

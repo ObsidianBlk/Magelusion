@@ -100,6 +100,7 @@ dark_color = Color( 0.117647, 0.00392157, 0.0901961, 1 )
 
 [node name="Exit_NextLevel" parent="Exits" instance=ExtResource( 9 )]
 position = Vector2( -164, 32 )
+next_level_src = "res://scenes/Maps/Level1.tscn"
 light_color = Color( 0.329412, 0.27451, 0.25098, 1 )
 dark_color = Color( 0.105882, 0.00784314, 0.101961, 1 )
 
@@ -396,7 +397,6 @@ dialog_src = "res://data/dialogs/hub_200_aboutdemo.json"
 auto_start_time = 0.25
 
 [node name="CanvasModulate" type="CanvasModulate" parent="."]
-visible = false
 color = Color( 0.117647, 0.105882, 0.113725, 1 )
 [connection signal="level_exit" from="Exits/Exit_DemoMap" to="." method="_on_level_exit"]
 [connection signal="level_exit" from="Exits/Exit_NextLevel" to="." method="_on_level_exit"]
