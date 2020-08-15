@@ -7,11 +7,28 @@ const SWITCH_OFF_SIGNAL = "switchOff"
 export (NodePath) var switch_path = "" setget _setSwitchPath
 export (bool) var switch_inverted = false
 export (bool) var out = true setget _setOut
+export (Color) var color_a = Color(1.0, 1.0, 1.0, 1.0)
+export (Color) var color_b = Color(0.0, 0.0, 0.0, 1.0)
 
 var ready = false
 onready var enabled_collision_layer = collision_layer
 onready var enabled_collision_mask = collision_mask
 
+
+func _setColorA(c):
+	c.a = 1.0
+	color_a = c
+	_updateColors()
+
+func _setColorB(c):
+	c.a = 1.0
+	color_b = c
+	_updateColors()
+
+func _updateColors():
+	if ready:
+		$Sprite.get_material().set_shader_param("COLOR_A_REPLACEMENT", color_a)
+		$Sprite.get_material().set_shader_param("COLOR_B_REPLACEMENT", color_b)
 
 func _setOut(o):
 	if out != o:
@@ -53,6 +70,7 @@ func _disconnectSwitch():
 func _ready():
 	ready = true
 	_connectSwitch()
+	_updateColors()
 	if not out:
 		$Sprite.modulate.a = 0.0
 		collision_layer = 0

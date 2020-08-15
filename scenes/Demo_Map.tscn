@@ -146,6 +146,7 @@ position = Vector2( 80, 32 )
 
 [node name="Platform2" parent="." instance=ExtResource( 16 )]
 position = Vector2( 80, 56 )
+collision_layer = 0
 switch_path = NodePath("../../Demo_Map/PlatformSwitch")
 out = false
 

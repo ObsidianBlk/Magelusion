@@ -195,6 +195,7 @@ func _ready():
 	
 	# Connecting to the game database to watch for special variables...
 	Database.connect("valueChanged", self, "_on_db_change")
+	Database.connect("valueRemoved", self, "_on_db_removed")
 	
 	# Now the rest of it all!
 	_connectParticleContainer()
@@ -381,6 +382,21 @@ func _on_wand_animation_finished(anim):
 			$Wand/Player.play("Idle")
 		if $ASprite.animation != "Hurt":
 			$Wand/Player.play($ASprite.animation)
+
+func _on_db_removed(name):
+	match name:
+		"PLAYER_SPELL_Light":
+			spell_available[SPELL.LIGHT] = false
+			if spell_mode == SPELL.LIGHT:
+				_selectMode(SPELL.NONE)
+		"PLAYER_SPELL_Fire":
+			spell_available[SPELL.FIRE] = false
+			if spell_mode == SPELL.FIRE:
+				_selectMode(SPELL.NONE)
+		"PLAYER_SPELL_Water":
+			spell_available[SPELL.WATER] = false
+			if spell_mode == SPELL.WATER:
+				_selectMode(SPELL.NONE)
 
 func _on_db_change(name, val):
 	match name:

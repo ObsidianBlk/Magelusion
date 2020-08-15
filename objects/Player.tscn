@@ -339,7 +339,7 @@ tracks/1/keys = {
 
 [sub_resource type="CapsuleShape2D" id=32]
 radius = 3.0
-height = 2.0
+height = 1.0
 
 [node name="Player" type="KinematicBody2D" groups=[
 "Player",
@@ -400,7 +400,7 @@ anims/WandOut = SubResource( 31 )
 audio_player_path = NodePath("../GFX/WandAudio")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-visible = false
+position = Vector2( 0, 0.5 )
 shape = SubResource( 32 )
 
 [node name="BloodSplatterComp" parent="." instance=ExtResource( 5 )]

@@ -58,7 +58,7 @@ func _ready():
 	$AudioCtrl.addSample("gate_close", "res://media/audio/sfx/gate_closing.wav")
 	_connectSwitch()
 
-func _process(delta):
+func _physics_process(delta):
 	if stateSwitched:
 		motion = Vector2.ZERO
 		stateSwitched = false
@@ -71,6 +71,7 @@ func _process(delta):
 	if motion.length() > 0.0:
 		var res = move_and_collide(motion)
 		if res:
+			motion = Vector2.ZERO
 			state = State.REST
 
 func _on_switch_on():

@@ -20,7 +20,7 @@ func clearMap():
 		var mapNode = children[0]
 		
 		mapNode.disconnect("next_level", self, "_on_next_level")
-		mapNode.disconnect("win_game", self, "_on_win_game")
+		mapNode.disconnect("win_game", get_tree().root.get_node("World"), "_on_win_game")
 		
 		if mapNode.has_node("Player_Layer") and mapNode.has_node("Camera_Layer"):
 			if mapNode.has_node("Player_Layer/Player"):
@@ -87,7 +87,7 @@ func _connectMapSignals(map : Node2D):
 			map.connect("next_level", self, "_on_next_level")
 			foundWayOut = true
 		elif sig["name"] == "win_game":
-			map.connect("win_game", self, "_on_win_game")
+			map.connect("win_game", get_tree().root.get_node("World"), "_on_win_game")
 			foundWayOut = true
 	if not foundWayOut:
 		print("WARNING: Map has no way out!! You stuck bro!!")
@@ -95,8 +95,6 @@ func _connectMapSignals(map : Node2D):
 func _on_next_level(next):
 	loadMap(next)
 
-func _on_win_game():
-	pass
 
 
 

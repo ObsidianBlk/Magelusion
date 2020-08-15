@@ -58,6 +58,8 @@ func _setLit(l, emit = true):
 
 func _ready():
 	ready = true
+	if switch_path != "":
+		_connectSwitch()
 	_setLit(lit, false)
 
 func _process(delta):

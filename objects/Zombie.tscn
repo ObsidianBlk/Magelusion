@@ -184,6 +184,7 @@ shape = SubResource( 29 )
 material = SubResource( 27 )
 frames = SubResource( 25 )
 animation = "Fall"
+frame = 1
 playing = true
 
 [node name="Fire" parent="." instance=ExtResource( 4 )]

@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://objects/Player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://media/theme/main_theme.tres" type="Theme" id=2]
@@ -10,6 +10,8 @@
 [ext_resource path="res://media/graphics/menu/Button_normal.png" type="Texture" id=8]
 [ext_resource path="res://media/graphics/menu/Button_hover.png" type="Texture" id=9]
 [ext_resource path="res://media/graphics/dialog_box.png" type="Texture" id=10]
+[ext_resource path="res://media/graphics/menu/Winner_Screen.png" type="Texture" id=11]
+[ext_resource path="res://scenes/Winner_Screen.gd" type="Script" id=12]
 
 [sub_resource type="Environment" id=5]
 background_mode = 4
@@ -156,6 +158,33 @@ text = "Quit"
 align = 1
 valign = 1
 
+[node name="Winner_Screen" type="Control" parent="UI"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 12 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect" type="ColorRect" parent="UI/Winner_Screen"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0, 0, 0, 1 )
+
+[node name="Image" type="TextureRect" parent="UI/Winner_Screen"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+texture = ExtResource( 11 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Tween" type="Tween" parent="UI/Winner_Screen"]
+
+[node name="DisplayTime" type="Timer" parent="UI/Winner_Screen"]
+wait_time = 3.0
+
 [node name="Dialog" type="Control" parent="UI"]
 visible = false
 anchor_right = 1.0
@@ -190,3 +219,6 @@ __meta__ = {
 }
 [connection signal="pressed" from="UI/Main Menu/Start" to="." method="_on_MainMenu_Start_pressed"]
 [connection signal="pressed" from="UI/Main Menu/Quit" to="." method="_on_MainMenu_Quit_pressed"]
+[connection signal="restart_game" from="UI/Winner_Screen" to="." method="_on_restart_game"]
+[connection signal="tween_all_completed" from="UI/Winner_Screen/Tween" to="UI/Winner_Screen" method="_on_Tween_all_completed"]
+[connection signal="timeout" from="UI/Winner_Screen/DisplayTime" to="UI/Winner_Screen" method="_on_DisplayTime_timeout"]

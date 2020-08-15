@@ -7,6 +7,10 @@ signal valueChanged(name, newval)
 signal valueAdded(name, val)
 signal valueRemoved(name)
 
+func reset():
+	var keys = db.keys()
+	for key in keys:
+		clear(key)
 
 func get(name : String):
 	if name in db:
