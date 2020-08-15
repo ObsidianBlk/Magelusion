@@ -14,6 +14,7 @@ func _ready():
 	Database.set(GAMESTATE_PAUSED, true)
 	Database.connect("valueChanged", self, "_on_database_changed")
 	$"UI/Main Menu".visible = true
+	$"UI/Main Menu/Start".grab_focus()
 
 func _input(event):
 	if event.is_action_pressed("ui_cancel"):
@@ -24,6 +25,7 @@ func _on_database_changed(name, value):
 	if name == GAMESTATE_PAUSED:
 		if value:
 			$"UI/Main Menu".visible = true
+			$"UI/Main Menu/Start".grab_focus()
 		else:
 			$"UI/Main Menu".visible = false
 

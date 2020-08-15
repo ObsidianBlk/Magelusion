@@ -262,7 +262,10 @@ func _physics_process(delta):
 			left_down = false
 			right_down = false
 			down_down = false
+			_stopCasting()
+			set_collision_mask_bit(PLATFORM_BIT, true)
 			motion = Vector2.ZERO
+		return
 
 	if damage > 0.0:
 		damage = 0.0 # TODO: Actually subtract this from some form of life tracker!

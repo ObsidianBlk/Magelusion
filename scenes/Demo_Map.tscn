@@ -1,8 +1,10 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=19 format=2]
 
 [ext_resource path="res://objects/SpellOrb.tscn" type="PackedScene" id=1]
 [ext_resource path="res://shaders/Colorizer.shader" type="Shader" id=2]
 [ext_resource path="res://objects/DialogTrigger.tscn" type="PackedScene" id=3]
+[ext_resource path="res://objects/Exit_Door.tscn" type="PackedScene" id=4]
+[ext_resource path="res://scenes/Demo_Map.gd" type="Script" id=5]
 [ext_resource path="res://objects/Spike_collision.gd" type="Script" id=8]
 [ext_resource path="res://objects/Invisible Switch.tscn" type="PackedScene" id=9]
 [ext_resource path="res://scenes/Tilesets/Brick_Tileset.tres" type="TileSet" id=10]
@@ -44,7 +46,8 @@ shader_param/COLOR_A_REPLACEMENT = Color( 0.0509804, 0.439216, 0.2, 1 )
 shader_param/COLOR_B = Color( 0, 0, 0, 1 )
 shader_param/COLOR_B_REPLACEMENT = Color( 0, 0, 0, 1 )
 
-[node name="Map" type="Node2D"]
+[node name="Demo_Map" type="Node2D"]
+script = ExtResource( 5 )
 
 [node name="Static Background" type="TileMap" parent="."]
 tile_set = ExtResource( 10 )
@@ -65,19 +68,19 @@ tile_data = PoolIntArray( 3, 10, 0, 6, 3, 0, 65542, 6, 0, 65544, 7, 0, 65565, 11
 
 [node name="Gate" parent="." instance=ExtResource( 15 )]
 position = Vector2( 180, 10 )
-switch_path = NodePath("../Switches/Wall Switch2")
+switch_path = NodePath("../../Demo_Map/Switches/Wall Switch2")
 lift_speed = 8.0
 fall_speed = 25.0
 
 [node name="Gate2" parent="." instance=ExtResource( 15 )]
 position = Vector2( 148, 72 )
-switch_path = NodePath("../Switches/PressurePlate")
+switch_path = NodePath("../../Demo_Map/Switches/PressurePlate")
 lift_speed = 8.0
 fall_speed = 25.0
 
 [node name="Gate3" parent="." instance=ExtResource( 15 )]
 position = Vector2( 238, 72 )
-switch_path = NodePath("../Switches/Invisible Switch")
+switch_path = NodePath("../../Demo_Map/Switches/Invisible Switch")
 lift_speed = 8.0
 fall_speed = 25.0
 
@@ -142,7 +145,7 @@ position = Vector2( 80, 32 )
 
 [node name="Platform2" parent="." instance=ExtResource( 16 )]
 position = Vector2( 80, 56 )
-switch_path = NodePath("../PlatformSwitch")
+switch_path = NodePath("../../Demo_Map/PlatformSwitch")
 out = false
 
 [node name="Spike_collision" type="Area2D" parent="."]
@@ -157,7 +160,7 @@ shape = SubResource( 3 )
 
 [node name="Air Pusher" parent="." instance=ExtResource( 14 )]
 position = Vector2( 129, 80 )
-switch_path = NodePath("../Switches/Wall Switch")
+switch_path = NodePath("../../Demo_Map/Switches/Wall Switch")
 enabled = false
 width = 8.0
 height = 32.0
@@ -210,6 +213,12 @@ position = Vector2( 164, 78 )
 color = Color( 0.0313726, 0.266667, 0.976471, 1 )
 spell_name = "Water"
 
+[node name="Exit_Door" parent="." instance=ExtResource( 4 )]
+position = Vector2( 260, 72 )
+next_level_src = "res://scenes/Maps/Level1.tscn"
+light_color = Color( 0.25098, 0.321569, 0.376471, 1 )
+dark_color = Color( 0.0509804, 0.00784314, 0.0784314, 1 )
+
 [node name="Player_Layer" type="Node2D" parent="."]
 
 [node name="Particle_Container" type="Node2D" parent="."]
@@ -224,6 +233,7 @@ tile_data = PoolIntArray( 196615, 26, 0, 262148, 23, 0, 262149, 25, 0, 262151, 3
 [node name="Camera_Layer" type="Node2D" parent="."]
 
 [node name="CanvasModulate" type="CanvasModulate" parent="."]
+visible = false
 color = Color( 0.0352941, 0.0352941, 0.0352941, 1 )
 
 [node name="Player_Start" type="Position2D" parent="."]
@@ -236,6 +246,7 @@ fire_triggers = [ NodePath("../Fires/Fire3"), NodePath("../Fires/Fire5") ]
 [node name="Dialogs" type="Node2D" parent="."]
 
 [node name="DialogTrigger" parent="Dialogs" instance=ExtResource( 3 )]
-switch_path = NodePath("../../Switches/Dialog_Trigger")
+switch_path = NodePath("../../../Demo_Map/Switches/Dialog_Trigger")
 dialog_src = "res://data/dialogs/test_dialog.json"
 repeatable = true
+[connection signal="level_exit" from="Exit_Door" to="." method="_on_level_exit"]

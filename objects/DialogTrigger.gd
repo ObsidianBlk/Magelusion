@@ -13,11 +13,20 @@ export(bool) var repeatable = false
 
 
 var ready = false
+var handle_autostart = true
 var reload_original_source = false
 var dialog_node = null
 var dialog_playing = false
 var dialog_played = false
 var dialog_data = null
+
+var accept_input = true
+var input_accept_delay_time = 0.25
+var input_accept_delay = 0.0
+
+var attempt_cancel = false
+var dialog_cancel_time = 0.5
+var dialog_cancel_delay = 0.0
 
 var dialog_line = 0
 var dialog_display_time = 0.0
@@ -69,7 +78,7 @@ func _updateDialogPercentage():
 	var p = dialog_display_time / display_time
 	dialog_node.get_node("Label").percent_visible = p
 
-func _setDialogLine(n):
+func _setDialogLine(n, triggers_only = false):
 	if dialog_data.lines.size() > n:
 		var type = typeof(dialog_data.lines[n])
 		var line = ""
@@ -87,19 +96,37 @@ func _setDialogLine(n):
 		else:
 			return false
 
-		dialog_node.get_node("Label").text = line
-		dialog_node.get_node("Label").percent_visible = 0.0
-		dialog_display_time = 0.0
+		if not triggers_only:
+			dialog_node.get_node("Label").text = line
+			dialog_node.get_node("Label").percent_visible = 0.0
+			dialog_display_time = 0.0
 		return true
 	return false
 
+
+func _skipDialog():
+	# Run through every line, just to make sure we trigger everything
+	# because otherwise we might trap the player!
+	dialog_line += 1
+	while _setDialogLine(dialog_line) == true:
+		dialog_line += 1
+
+func _dialogEnd():
+	dialog_playing = false
+	dialog_played = true
+	dialog_line = 0
+	dialog_node.visible = false
+	Database.set(DB_VAR, false)
+
+
 func _ready():
 	ready = true
+	if switch_path != "":
+		handle_autostart = false
 	dialog_node = get_tree().root.get_node("World/UI/Dialog")
 	if dialog_src != "":
 		dialog_data = _loadDialogData(dialog_src)
 		if dialog_data:
-			_configureFromData()
 			_connectSwitch()
 		else:
 			print("WARNING: Unable to load or parse dialog data at '", dialog_src, "'.")
@@ -107,8 +134,20 @@ func _ready():
 		print("WARNING: No dialog data source set.")
 
 func _input(event):
-	if dialog_node.visible:
+	if dialog_playing and dialog_node.visible:
 		if (event is InputEventKey or event is InputEventMouseButton or event is InputEventJoypadButton) and not event.is_echo():
+			if event.is_action_pressed("p1_cast"):
+				if attempt_cancel:
+					_skipDialog()
+					_dialogEnd()
+				else:
+					attempt_cancel = true
+			
+			if not accept_input:
+				return
+			input_accept_delay = input_accept_delay_time
+			accept_input = false
+
 			if dialog_display_time < display_time:
 				dialog_display_time = display_time
 				_updateDialogPercentage()
@@ -132,20 +171,27 @@ func _input(event):
 							else:
 								print("WARNING: Failed to reload original dialog data.")
 								repeatable = false # Force non-repeat because something went wrong.
-						dialog_playing = false
-						dialog_played = true
-						dialog_line = 0
-						dialog_node.visible = false
-						Database.set(DB_VAR, false)
+						_dialogEnd()
 
 
 func _process(delta):
-	if auto_start_time > 0:
+	if handle_autostart and auto_start_time > 0:
 		auto_start_time -= delta
 		if auto_start_time <= 0.0:
 			_on_switch_on()
 
-	if dialog_node.visible:
+	if dialog_playing and dialog_node.visible:
+		if attempt_cancel:
+			dialog_cancel_delay += delta
+			if dialog_cancel_delay >= dialog_cancel_time:
+				dialog_cancel_delay = 0.0
+				attempt_cancel = false
+		
+		if input_accept_delay > 0.0:
+			input_accept_delay -= delta
+			if input_accept_delay <= 0.0:
+				accept_input = true
+
 		if dialog_display_time < display_time:
 			dialog_display_time += delta
 			if dialog_display_time > display_time:
@@ -155,8 +201,15 @@ func _process(delta):
 
 func _on_switch_on():
 	if not dialog_playing:
-		if (not dialog_played or repeatable) and dialog_data != null:
-			Database.set(DB_VAR, true)
+		if not handle_autostart:
+			# This should allow for a pause before dialog starts but after a trigger
+			# sends the 'switchOn' event!
+			handle_autostart = true
+		elif (not dialog_played or repeatable) and dialog_data != null:
+			if DB_VAR != "":
+				Database.set(DB_VAR, true)
+			dialog_playing = true
+			_configureFromData()
 			dialog_node.visible = true
 			dialog_node.get_node("Label").text = dialog_data.lines[dialog_line]
 

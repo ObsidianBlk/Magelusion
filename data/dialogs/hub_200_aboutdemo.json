@@ -1,0 +1,40 @@
+{
+  "color":{
+    "r":0.0,
+    "g":0.5,
+    "b":1.0
+  },
+  "lines":[
+    "Hey player!",
+    "Youve found the door",
+    "to the demo level",
+    "I used to test most",
+    "elements of this game.",
+    "It's nothing fancy,",
+    "but I like putting",
+    "these test levels in",
+    "my games, so people",
+    "can muck about.",
+    "...",
+    "No...",
+    "You can't turn back",
+    "that was a one way",
+    "fall you took.",
+    "You either have to",
+    "brave the demo level,",
+    "or restart the game.",
+    "...",
+    "I will say this, though,",
+    "At the end of the demo",
+    "level, is a door that",
+    "will lead you to",
+    "level one!",
+    "sooooo",
+    "if you haven't played",
+    "the actual game yet,",
+    "you get a little bonus",
+    "before that fun begins",
+    "...",
+    "enjoy!!!"
+  ]
+}
