@@ -433,3 +433,6 @@ angle_variance = 0.025
 
 [node name="PlayerAudio" type="AudioStreamPlayer2D" parent="."]
 bus = "SFX"
+
+[node name="AudioCtrl" parent="." instance=ExtResource( 11 )]
+audio_player_path = NodePath("../PlayerAudio")

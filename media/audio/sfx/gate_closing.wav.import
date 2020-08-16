@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/gate_closing.wav-c742c434eb464e2bf604e8168ac19a67.sample"
+
+[deps]
+
+source_file="res://media/audio/sfx/gate_closing.wav"
+dest_files=[ "res://.import/gate_closing.wav-c742c434eb464e2bf604e8168ac19a67.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

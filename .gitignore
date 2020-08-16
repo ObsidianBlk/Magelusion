@@ -1,5 +1,3 @@
-# This line is temporary!!
-media/audio/*
 
 # Godot-specific ignores
 .import/

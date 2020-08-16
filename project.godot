@@ -23,6 +23,7 @@ config/icon="res://icon.png"
 
 MapLoader="*res://scenes/Autoloads/MapLoader.gd"
 Database="*res://scenes/Autoloads/Database.gd"
+MusicManager="*res://scenes/Autoloads/MusicManager.tscn"
 
 [display]
 

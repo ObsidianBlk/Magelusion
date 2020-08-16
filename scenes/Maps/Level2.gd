@@ -6,8 +6,8 @@ signal win_game
 
 
 func _ready():
-	MusicManager.addMusic("Suspense", "res://media/audio/music/Suspense.ogg")
-	MusicManager.play("Suspense")
+	MusicManager.stop()
+
 
 func _on_level_exit(next):
 	# NOTE: This really is just a passthrough
@@ -17,3 +17,6 @@ func _on_level_exit(next):
 func _on_win_game():
 	# Yes... another passthrough
 	emit_signal("win_game")
+
+
+

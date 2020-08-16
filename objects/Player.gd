@@ -193,6 +193,8 @@ func _ready():
 	$Wand/WandAudioCtrl.addSample("Fire", "res://media/audio/sfx/fire-loop1.wav")
 	$Wand/WandAudioCtrl.addSample("Water", "res://media/audio/sfx/fr-water.wav")
 	
+	$AudioCtrl.addSample("JumpLand", "res://media/audio/sfx/jumpland.wav")
+	
 	# Connecting to the game database to watch for special variables...
 	Database.connect("valueChanged", self, "_on_db_change")
 	Database.connect("valueRemoved", self, "_on_db_removed")
@@ -284,7 +286,8 @@ func _physics_process(delta):
 			using_time = 0.0
 	
 	if not hurt:
-		if not is_on_floor():
+		var inAir = not is_on_floor()
+		if inAir:
 			motion.y = clamp(motion.y + (gravity * delta), -1000, gravity * 2)
 	
 		var dir = 0
@@ -308,6 +311,8 @@ func _physics_process(delta):
 	
 		_handle_animations(delta, dir)
 		motion = move_and_slide_with_snap(motion, snap_vec, Vector2(0, -1), false, 4, 0.785398, true)
+		if inAir and is_on_floor():
+			$AudioCtrl.play("JumpLand")
 		emit_signal("motion", Vector2(motion.x, 0.0))
 		if caststate == 1:
 			emit_signal("sprayUpdate", $Wand/GFX/SprayPoint.global_position, $Wand.scale)

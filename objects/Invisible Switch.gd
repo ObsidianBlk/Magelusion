@@ -87,13 +87,13 @@ func _getFireIndex(fire : Node2D):
 				return i
 	return -1
 
-func _allFiresLit():
+func _allFiresLit(invert:bool = false):
 	if fires.size() > 0:
 		for info in fires:
 			if not info.lit:
-				return false
-		return true
-	return false
+				return invert
+		return not invert
+	return invert
 
 func _addBody(group : String, body : Node2D):
 	if not (group in bodies):
@@ -185,14 +185,14 @@ func _on_fire_lit(fire):
 	var fi = _getFireIndex(fire)
 	if fi >= 0:
 		fires[fi].lit = true
-		if _allFiresLit():
+		if _allFiresLit(invert_trigger):
 			_emitSwitch()
 		
 
 func _on_fire_unlit(fire):
 	var fi = _getFireIndex(fire)
 	if fi >= 0:
-		var all_lit = _allFiresLit()
+		var all_lit = _allFiresLit(invert_trigger) # This NEEDS to come first!
 		fires[fi].lit = false
 		if all_lit:
 			_emitSwitch(false)

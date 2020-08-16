@@ -13,6 +13,10 @@ func _isMapLoaded():
 func _ready():
 	Database.set(GAMESTATE_PAUSED, true)
 	Database.connect("valueChanged", self, "_on_database_changed")
+	
+	MusicManager.addMusic("MysteryMenu", "res://media/audio/music/MysteryMenu.ogg")
+	MusicManager.play("MysteryMenu")
+	
 	$"UI/Main Menu".visible = true
 	$"UI/Main Menu/Start".grab_focus()
 
@@ -34,8 +38,8 @@ func _on_MainMenu_Start_pressed():
 		if $"UI/Main Menu/Start/Label".text == "Start":
 			Database.set(GAMESTATE_PAUSED, false)
 			#MapLoader.loadMap("res://scenes/Demo_Map.tscn")
-			#MapLoader.loadMap("res://scenes/Maps/Level1.tscn")
-			MapLoader.loadMap(initial_map)
+			MapLoader.loadMap("res://scenes/Maps/Level3.tscn")
+			#MapLoader.loadMap(initial_map)
 			if _isMapLoaded():
 				$"UI/Main Menu/Start/Label".text = "Resume"
 				$"UI/Main Menu/Background".visible = false

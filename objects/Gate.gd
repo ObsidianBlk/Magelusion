@@ -71,6 +71,10 @@ func _physics_process(delta):
 	if motion.length() > 0.0:
 		var res = move_and_collide(motion)
 		if res:
+			if state == State.LOWER:
+				# This is a little hack to fix a collision issue on closing the gate.
+				# Issue most likely due to the very small resolution/scale of the game.
+				global_position.y = floor(global_position.y)
 			motion = Vector2.ZERO
 			state = State.REST
 

@@ -6,7 +6,8 @@ signal win_game
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass # Replace with function body.
+	MusicManager.addMusic("Mystery", "res://media/audio/music/Mystery.ogg")
+	MusicManager.play("Mystery")
 
 
 

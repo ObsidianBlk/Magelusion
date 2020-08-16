@@ -3,6 +3,8 @@ extends StaticBody2D
 export(Array, String) var trigger_groups
 export(Array, int) var trigger_count
 export(bool) var single_trigger = false
+export(bool) var locked = false
+export(bool) var invert = false
 
 signal switchOn
 signal switchOff
@@ -36,7 +38,8 @@ func _isTriggered():
 	if trigger_groups.size() > 0:
 		for i in range(trigger_groups.size()):
 			var tcount = _getTriggerCountForGroup(trigger_groups[i])
-			if tcount > 0 and _bodiesInGroup(trigger_groups[i]):
+			var bcount = _bodiesInGroup(trigger_groups[i])
+			if tcount > 0 and _bodiesInGroup(trigger_groups[i]) >= tcount:
 				return true
 	return false
 
@@ -81,7 +84,10 @@ func _on_body_entered(body):
 			if _isTriggered() and $AnimatedSprite.animation != "Down":
 				_setState(STATE.DOWN)
 				$AudioStream.play()
-				emit_signal("switchOn")
+				if invert:
+					emit_signal("switchOff")
+				else:
+					emit_signal("switchOn")
 				if single_trigger:
 					no_trigger = true
 
@@ -93,6 +99,10 @@ func _on_body_exited(body):
 		if _removeBody(group, body):
 			if not _isTriggered() and $AnimatedSprite.animation != "Up":
 				_setState(STATE.UP)
-				$AudioStream.play()
-				emit_signal("switchOff")
+				if not (single_trigger and locked):
+					$AudioStream.play()
+					if invert:
+						emit_signal("switchOn")
+					else:
+						emit_signal("switchOff")
 

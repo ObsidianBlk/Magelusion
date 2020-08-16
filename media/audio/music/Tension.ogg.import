@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/Tension.ogg-a85d71aa8a08d66705d721f0689665e9.oggstr"
+
+[deps]
+
+source_file="res://media/audio/music/Tension.ogg"
+dest_files=[ "res://.import/Tension.ogg-a85d71aa8a08d66705d721f0689665e9.oggstr" ]
+
+[params]
+
+loop=true
+loop_offset=0
