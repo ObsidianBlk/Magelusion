@@ -38,8 +38,8 @@ func _on_MainMenu_Start_pressed():
 		if $"UI/Main Menu/Start/Label".text == "Start":
 			Database.set(GAMESTATE_PAUSED, false)
 			#MapLoader.loadMap("res://scenes/Demo_Map.tscn")
-			MapLoader.loadMap("res://scenes/Maps/Level3.tscn")
-			#MapLoader.loadMap(initial_map)
+			#MapLoader.loadMap("res://scenes/Maps/Jank.tscn")
+			MapLoader.loadMap(initial_map)
 			if _isMapLoaded():
 				$"UI/Main Menu/Start/Label".text = "Resume"
 				$"UI/Main Menu/Background".visible = false
@@ -58,6 +58,7 @@ func _on_restart_game():
 	Database.reset()
 	$"UI/Main Menu/Start/Label".text = "Start"
 	$"UI/Main Menu/Background".visible = true
+	MusicManager.play("MysteryMenu")
 	$"UI/Main Menu".visible = true
 	$"UI/Main Menu/Start".grab_focus()
 

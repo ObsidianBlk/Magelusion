@@ -6,7 +6,8 @@ signal win_game
 
 
 func _ready():
-	MusicManager.stop()
+	MusicManager.addMusic("Mystery", "res://media/audio/music/Mystery.ogg")
+	MusicManager.play("Mystery")
 
 
 func _on_level_exit(next):

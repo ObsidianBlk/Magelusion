@@ -6,7 +6,8 @@ signal win_game
 
 
 func _ready():
-	MusicManager.stop()
+	MusicManager.addMusic("Tension", "res://media/audio/music/Tension.ogg")
+	MusicManager.play("Tension")
 
 
 func _on_level_exit(next):

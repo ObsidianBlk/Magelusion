@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=18 format=2]
 
 [ext_resource path="res://shaders/Colorizer.shader" type="Shader" id=1]
 [ext_resource path="res://scenes/Tilesets/Brick_Tileset.tres" type="TileSet" id=2]
@@ -12,6 +12,7 @@
 [ext_resource path="res://objects/SpellOrb.tscn" type="PackedScene" id=10]
 [ext_resource path="res://objects/Platform.tscn" type="PackedScene" id=11]
 [ext_resource path="res://objects/Invisible Switch.tscn" type="PackedScene" id=12]
+[ext_resource path="res://objects/DialogTrigger.tscn" type="PackedScene" id=13]
 
 [sub_resource type="ShaderMaterial" id=1]
 resource_local_to_scene = true
@@ -138,6 +139,7 @@ dark_color = Color( 0.980392, 0.992157, 0.768627, 1 )
 
 [node name="JankLevel_Door" parent="Doors" instance=ExtResource( 7 )]
 position = Vector2( 287, -16 )
+next_level_src = "res://scenes/Maps/Jank.tscn"
 light_color = Color( 0.286275, 0.431373, 0.282353, 1 )
 dark_color = Color( 0.0431373, 0.145098, 0.027451, 1 )
 
@@ -193,6 +195,37 @@ fire_triggers = [ NodePath("../../Fire/Exit_Fire1"), NodePath("../../Fire/Exit_F
 position = Vector2( 325.367, -14 )
 off_timer = 5.0
 color_a = Color( 0.27451, 0.188235, 0.188235, 1 )
+
+[node name="Exit_Dialog_Switch" parent="Switches" instance=ExtResource( 12 )]
+position = Vector2( 133.152, 50 )
+trigger_groups = [ "Player" ]
+trigger_count = [ 1 ]
+single_trigger = true
+
+[node name="Jank_Dialog_Switch" parent="Switches" instance=ExtResource( 12 )]
+position = Vector2( 287, -11.8268 )
+trigger_groups = [ "Player" ]
+trigger_count = [ 1 ]
+single_trigger = true
+
+[node name="Dialog" type="Node2D" parent="."]
+
+[node name="Allonyou_Dialog" parent="Dialog" instance=ExtResource( 13 )]
+position = Vector2( 393.306, 69 )
+dialog_src = "res://data/dialogs/level3_001_allonyou.json"
+auto_start_time = 1.5
+
+[node name="Exit_Dialog" parent="Dialog" instance=ExtResource( 13 )]
+position = Vector2( 100, 36 )
+switch_path = NodePath("../../Switches/Exit_Dialog_Switch")
+dialog_src = "res://data/dialogs/level3_002_exit.json"
+auto_start_time = 0.25
+
+[node name="Jank_Dialog" parent="Dialog" instance=ExtResource( 13 )]
+position = Vector2( 287, -27.1369 )
+switch_path = NodePath("../../Switches/Jank_Dialog_Switch")
+dialog_src = "res://data/dialogs/level3_101_jank.json"
+auto_start_time = 0.25
 
 [node name="Platforms" type="Node2D" parent="."]
 

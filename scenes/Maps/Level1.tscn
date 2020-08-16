@@ -140,6 +140,24 @@ position = Vector2( 23, 124 )
 fire_triggers = [ NodePath("../../Fires/Hidden_Fire") ]
 single_trigger = true
 
+[node name="Firetriggers_Dialog_Switch" parent="Switches" instance=ExtResource( 6 )]
+position = Vector2( 102.151, 164.034 )
+trigger_groups = [ "Player" ]
+trigger_count = [ 1 ]
+single_trigger = true
+
+[node name="Account_Dialog_Switch" parent="Switches" instance=ExtResource( 6 )]
+position = Vector2( 152.671, 161 )
+trigger_groups = [ "Player" ]
+trigger_count = [ 1 ]
+single_trigger = true
+
+[node name="Missingtrap_Dialog_Switch" parent="Switches" instance=ExtResource( 6 )]
+position = Vector2( 152.671, 122 )
+trigger_groups = [ "Player" ]
+trigger_count = [ 1 ]
+single_trigger = true
+
 [node name="Dialogs" type="Node2D" parent="."]
 
 [node name="Pusher_Dialog" parent="Dialogs" instance=ExtResource( 9 )]
@@ -150,6 +168,29 @@ auto_start_time = 1.0
 position = Vector2( 68.3228, 171.034 )
 switch_path = NodePath("../../SpellOrbs/SpellOrb_Fire")
 dialog_src = "res://data/dialogs/level1_002_firespell.json"
+auto_start_time = 0.25
+
+[node name="Firetriggers_Dialog" parent="Dialogs" instance=ExtResource( 9 )]
+switch_path = NodePath("../../Switches/Firetriggers_Dialog_Switch")
+dialog_src = "res://data/dialogs/level1_003_firetriggers.json"
+auto_start_time = 0.25
+
+[node name="Account_Dialog" parent="Dialogs" instance=ExtResource( 9 )]
+position = Vector2( 157.687, 152 )
+switch_path = NodePath("../../Switches/Account_Dialog_Switch")
+dialog_src = "res://data/dialogs/level1_101_account.json"
+auto_start_time = 0.25
+
+[node name="Seriously_Dialog" parent="Dialogs" instance=ExtResource( 9 )]
+position = Vector2( 54.8165, 83 )
+switch_path = NodePath("../../Switches/Upper_Cell_Gate_Switch")
+dialog_src = "res://data/dialogs/level1_004_seriously.json"
+auto_start_time = 1.0
+
+[node name="Missingtrap_Dialog" parent="Dialogs" instance=ExtResource( 9 )]
+position = Vector2( 160, 109 )
+switch_path = NodePath("../../Switches/Missingtrap_Dialog_Switch")
+dialog_src = "res://data/dialogs/level1_102_missingtrap.json"
 auto_start_time = 0.25
 
 [node name="Doors" type="Node2D" parent="."]
