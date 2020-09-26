@@ -99,6 +99,7 @@ func _setDialogLine(n, triggers_only = false):
 					emit_signal("switchOff")
 			if "tutorial" in dialog_data.lines[n]:
 				if dialog_data.lines[n].tutorial == true and not dialog_tutorial_enabled:
+					print ("Skipping tutorial line... ", line)
 					dialog_line_skip = true
 					return false # The one and only time this is not a bad thing.
 		elif type == TYPE_STRING:
@@ -131,6 +132,7 @@ func _dialogEnd():
 func _dialogProcess(triggerOnly = false):
 	if not _setDialogLine(dialog_line, triggerOnly):
 		if dialog_line_skip:
+			print("Skipping Line")
 			dialog_line_skip = false
 			dialog_line = dialog_line + 1
 			_dialogProcess(triggerOnly)
@@ -191,7 +193,7 @@ func _input(event):
 				_updateDialogPercentage()
 			else:
 				dialog_display_time = 0
-				dialog_line = dialog_line + 1
+				#dialog_line = dialog_line + 1
 				_dialogProcess()
 				#if not _setDialogLine(dialog_line):
 				#	if "next_src" in dialog_data:

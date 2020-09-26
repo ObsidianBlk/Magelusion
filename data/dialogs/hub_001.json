@@ -16,7 +16,6 @@
     "You'll have to escape. But,",
     "Without any magic, how could you?",
     "I could help you out,",
-    "I suppose",
     "Would you like me to help you?",
     {"switch":true, "text":"There you go, Mage! A way out."},
     "It's not that simple though.",
