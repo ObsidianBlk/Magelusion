@@ -12,10 +12,10 @@ func reset():
 	for key in keys:
 		clear(key)
 
-func get(name : String):
+func get(name : String, default = null):
 	if name in db:
 		return db[name]
-	return null
+	return default
 
 func set(name : String, value):
 	var isnew = false

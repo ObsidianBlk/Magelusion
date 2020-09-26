@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=35 format=2]
 
 [ext_resource path="res://objects/Player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://media/theme/main_theme.tres" type="Theme" id=2]
@@ -12,13 +12,15 @@
 [ext_resource path="res://media/graphics/dialog_box.png" type="Texture" id=10]
 [ext_resource path="res://media/graphics/menu/Winner_Screen.png" type="Texture" id=11]
 [ext_resource path="res://scenes/Winner_Screen.gd" type="Script" id=12]
+[ext_resource path="res://media/graphics/menu/UIElements.png" type="Texture" id=13]
+[ext_resource path="res://scenes/OptionsCTRL.gd" type="Script" id=14]
 
-[sub_resource type="Environment" id=5]
+[sub_resource type="Environment" id=1]
 background_mode = 4
 glow_enabled = true
 glow_intensity = 0.95
 
-[sub_resource type="ShaderMaterial" id=6]
+[sub_resource type="ShaderMaterial" id=2]
 shader = ExtResource( 5 )
 shader_param/seed = 99.0
 shader_param/strength = 1.0
@@ -29,12 +31,97 @@ shader_param/scale_a = 10.0
 shader_param/scale_b = 10.0
 shader_param/offset = Vector2( 0, 0 )
 
+[sub_resource type="AtlasTexture" id=12]
+atlas = ExtResource( 13 )
+region = Rect2( 4, 0, 3, 3 )
+
+[sub_resource type="AtlasTexture" id=6]
+atlas = ExtResource( 13 )
+region = Rect2( 0, 0, 3, 4 )
+
+[sub_resource type="AtlasTexture" id=7]
+atlas = ExtResource( 13 )
+region = Rect2( 0, 0, 3, 4 )
+
+[sub_resource type="AtlasTexture" id=3]
+atlas = ExtResource( 13 )
+region = Rect2( 0, 0, 3, 4 )
+
+[sub_resource type="StyleBoxTexture" id=4]
+texture = ExtResource( 13 )
+region_rect = Rect2( 3, 0, 5, 3 )
+margin_left = 1.0
+margin_right = 1.0
+expand_margin_left = 1.0
+expand_margin_right = 1.0
+axis_stretch_horizontal = 1
+modulate_color = Color( 0.462745, 0.462745, 0.462745, 1 )
+
+[sub_resource type="StyleBoxTexture" id=13]
+texture = ExtResource( 13 )
+region_rect = Rect2( 4, 0, 3, 3 )
+axis_stretch_horizontal = 1
+
+[sub_resource type="StyleBoxTexture" id=5]
+texture = ExtResource( 13 )
+region_rect = Rect2( 4, 0, 3, 3 )
+axis_stretch_horizontal = 1
+modulate_color = Color( 0.784314, 0.784314, 0.784314, 1 )
+
+[sub_resource type="AtlasTexture" id=8]
+atlas = ExtResource( 13 )
+region = Rect2( 0, 0, 3, 4 )
+
+[sub_resource type="AtlasTexture" id=9]
+atlas = ExtResource( 13 )
+region = Rect2( 0, 0, 3, 4 )
+
+[sub_resource type="StyleBoxTexture" id=14]
+texture = ExtResource( 13 )
+region_rect = Rect2( 4, 0, 3, 3 )
+axis_stretch_horizontal = 1
+
+[sub_resource type="AtlasTexture" id=10]
+atlas = ExtResource( 13 )
+region = Rect2( 0, 0, 3, 4 )
+
+[sub_resource type="AtlasTexture" id=11]
+atlas = ExtResource( 13 )
+region = Rect2( 0, 0, 3, 4 )
+
+[sub_resource type="StyleBoxTexture" id=15]
+texture = ExtResource( 13 )
+region_rect = Rect2( 4, 0, 3, 3 )
+axis_stretch_horizontal = 1
+
+[sub_resource type="AtlasTexture" id=16]
+atlas = ExtResource( 13 )
+region = Rect2( 3, 4, 3, 3 )
+
+[sub_resource type="AtlasTexture" id=17]
+atlas = ExtResource( 13 )
+region = Rect2( 3, 4, 3, 3 )
+
+[sub_resource type="AtlasTexture" id=18]
+atlas = ExtResource( 13 )
+region = Rect2( 0, 4, 3, 3 )
+
+[sub_resource type="AtlasTexture" id=19]
+atlas = ExtResource( 13 )
+region = Rect2( 0, 4, 3, 3 )
+
+[sub_resource type="StyleBoxEmpty" id=30]
+content_margin_left = 4.0
+content_margin_right = 0.0
+content_margin_top = 3.0
+content_margin_bottom = 3.0
+
 [node name="World" type="Node2D"]
 script = ExtResource( 3 )
 initial_map = "res://scenes/Maps/Hub_World.tscn"
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = SubResource( 5 )
+environment = SubResource( 1 )
 
 [node name="Transition_Layer" type="Node2D" parent="."]
 
@@ -49,7 +136,6 @@ fog_color = Color( 1, 1, 1, 1 )
 [node name="UI" type="CanvasLayer" parent="."]
 
 [node name="Main Menu" type="Control" parent="UI"]
-visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 focus_neighbour_top = NodePath("Start")
@@ -74,7 +160,7 @@ anchor_bottom = 1.0
 color = Color( 0, 0, 0, 1 )
 
 [node name="Fog" type="ColorRect" parent="UI/Main Menu/Background"]
-material = SubResource( 6 )
+material = SubResource( 2 )
 anchor_right = 1.0
 anchor_bottom = 1.0
 __meta__ = {
@@ -95,17 +181,22 @@ margin_right = 24.0
 texture = ExtResource( 6 )
 stretch_mode = 6
 
-[node name="Start" type="TextureButton" parent="UI/Main Menu"]
-anchor_top = 0.506
+[node name="Buttons" type="VBoxContainer" parent="UI/Main Menu"]
 anchor_right = 1.0
-anchor_bottom = 0.506
-margin_left = 16.0
-margin_top = -4.384
-margin_right = -16.0
-margin_bottom = 3.616
+anchor_bottom = 1.0
+margin_left = 18.0
+margin_top = 24.0
+margin_right = -14.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Start" type="TextureButton" parent="UI/Main Menu/Buttons"]
+margin_right = 32.0
+margin_bottom = 8.0
 focus_neighbour_top = NodePath("../Quit")
-focus_neighbour_bottom = NodePath("../Quit")
-focus_next = NodePath("../Quit")
+focus_neighbour_bottom = NodePath("../Options")
+focus_next = NodePath("../Options")
 focus_previous = NodePath("../Quit")
 shortcut_in_tooltip = false
 texture_normal = ExtResource( 8 )
@@ -115,7 +206,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label" type="Label" parent="UI/Main Menu/Start"]
+[node name="Label" type="Label" parent="UI/Main Menu/Buttons/Start"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 2.0
@@ -125,18 +216,17 @@ custom_colors/font_color = Color( 0.678431, 0.580392, 0, 1 )
 text = "Start"
 align = 1
 valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="Quit" type="TextureButton" parent="UI/Main Menu"]
-anchor_top = 0.506
-anchor_right = 1.0
-anchor_bottom = 0.506
-margin_left = 16.0
-margin_top = 7.616
-margin_right = -16.0
-margin_bottom = 15.616
+[node name="Options" type="TextureButton" parent="UI/Main Menu/Buttons"]
+margin_top = 12.0
+margin_right = 32.0
+margin_bottom = 20.0
 focus_neighbour_top = NodePath("../Start")
-focus_neighbour_bottom = NodePath("../Start")
-focus_next = NodePath("../Start")
+focus_neighbour_bottom = NodePath("../Quit")
+focus_next = NodePath("../Quit")
 focus_previous = NodePath("../Start")
 shortcut_in_tooltip = false
 texture_normal = ExtResource( 8 )
@@ -146,7 +236,36 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label" type="Label" parent="UI/Main Menu/Quit"]
+[node name="Label" type="Label" parent="UI/Main Menu/Buttons/Options"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_bottom = -2.0
+theme = ExtResource( 2 )
+custom_colors/font_color = Color( 0.678431, 0.580392, 0, 1 )
+text = "Optns"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Quit" type="TextureButton" parent="UI/Main Menu/Buttons"]
+margin_top = 24.0
+margin_right = 32.0
+margin_bottom = 32.0
+focus_neighbour_top = NodePath("../Options")
+focus_neighbour_bottom = NodePath("../Start")
+focus_next = NodePath("../Start")
+focus_previous = NodePath("../Options")
+shortcut_in_tooltip = false
+texture_normal = ExtResource( 8 )
+texture_hover = ExtResource( 9 )
+stretch_mode = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="UI/Main Menu/Buttons/Quit"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 2.0
@@ -173,30 +292,278 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/Options"]
-margin_right = 40.0
-margin_bottom = 40.0
+[node name="Fog" type="ColorRect" parent="UI/Options"]
+material = SubResource( 2 )
+anchor_right = 1.0
+anchor_bottom = 1.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label" type="Label" parent="UI/Options/VBoxContainer"]
+[node name="Controls" type="VBoxContainer" parent="UI/Options"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 2.0
+margin_top = 2.0
+margin_right = -2.0
+margin_bottom = -4.0
+size_flags_horizontal = 3
+script = ExtResource( 14 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+focus_color = Color( 0.854902, 0.729412, 0.866667, 1 )
+idle_color = Color( 0.509804, 0.372549, 0.560784, 1 )
+
+[node name="MenuTitle" type="Label" parent="UI/Options/Controls"]
 margin_right = 60.0
 margin_bottom = 2.0
 theme = ExtResource( 2 )
+custom_colors/font_color = Color( 0.67451, 0.196078, 0.196078, 1 )
 text = "options menu"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Control" type="Control" parent="UI/Options/VBoxContainer"]
+[node name="VolumeControls" type="VBoxContainer" parent="UI/Options/Controls"]
 margin_top = 6.0
 margin_right = 60.0
-margin_bottom = 6.0
+margin_bottom = 22.0
+custom_constants/separation = 2
 
-[node name="HSlider" type="HSlider" parent="UI/Options/VBoxContainer/Control"]
-margin_right = 61.0
+[node name="MasterVolume" type="HBoxContainer" parent="UI/Options/Controls/VolumeControls"]
+margin_right = 60.0
+margin_bottom = 4.0
+size_flags_horizontal = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="UI/Options/Controls/VolumeControls/MasterVolume"]
+margin_top = 1.0
+margin_right = 28.0
+margin_bottom = 3.0
+size_flags_horizontal = 3
+theme = ExtResource( 2 )
+text = "Mastr"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MasterVolumeSlider" type="HSlider" parent="UI/Options/Controls/VolumeControls/MasterVolume"]
+modulate = Color( 0.419608, 0.34902, 0.454902, 1 )
+margin_left = 32.0
+margin_right = 60.0
+margin_bottom = 4.0
+focus_neighbour_top = NodePath("../../../../OptionsDone")
+focus_neighbour_bottom = NodePath("../../SFXVolume/SFXVolumeSlider")
+focus_next = NodePath("../../SFXVolume/SFXVolumeSlider")
+focus_previous = NodePath("../../../../OptionsDone")
+size_flags_horizontal = 3
+theme = ExtResource( 2 )
+custom_icons/tick = SubResource( 12 )
+custom_icons/grabber_disabled = SubResource( 6 )
+custom_icons/grabber_highlight = SubResource( 7 )
+custom_icons/grabber = SubResource( 3 )
+custom_styles/slider = SubResource( 4 )
+custom_styles/grabber_area_highlight = SubResource( 13 )
+custom_styles/grabber_area = SubResource( 5 )
+min_value = -80.0
+max_value = 0.0
+step = 0.25
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SFXVolume" type="HBoxContainer" parent="UI/Options/Controls/VolumeControls"]
+margin_top = 6.0
+margin_right = 60.0
+margin_bottom = 10.0
+size_flags_horizontal = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="UI/Options/Controls/VolumeControls/SFXVolume"]
+margin_top = 1.0
+margin_right = 28.0
+margin_bottom = 3.0
+size_flags_horizontal = 3
+theme = ExtResource( 2 )
+text = "SFX"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SFXVolumeSlider" type="HSlider" parent="UI/Options/Controls/VolumeControls/SFXVolume"]
+modulate = Color( 0.419608, 0.34902, 0.454902, 1 )
+margin_left = 32.0
+margin_right = 60.0
+margin_bottom = 4.0
+focus_neighbour_top = NodePath("../../MasterVolume/MasterVolumeSlider")
+focus_neighbour_bottom = NodePath("../../MusicVolume/MusicVolumeSlider")
+focus_next = NodePath("../../MusicVolume/MusicVolumeSlider")
+focus_previous = NodePath("../../MasterVolume/MasterVolumeSlider")
+size_flags_horizontal = 3
+theme = ExtResource( 2 )
+custom_icons/grabber_disabled = SubResource( 8 )
+custom_icons/grabber_highlight = SubResource( 9 )
+custom_icons/grabber = SubResource( 3 )
+custom_styles/slider = SubResource( 4 )
+custom_styles/grabber_area_highlight = SubResource( 14 )
+custom_styles/grabber_area = SubResource( 5 )
+min_value = -80.0
+max_value = 0.0
+step = 0.25
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MusicVolume" type="HBoxContainer" parent="UI/Options/Controls/VolumeControls"]
+margin_top = 12.0
+margin_right = 60.0
 margin_bottom = 16.0
+size_flags_horizontal = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="UI/Options/Controls/VolumeControls/MusicVolume"]
+margin_top = 1.0
+margin_right = 28.0
+margin_bottom = 3.0
+size_flags_horizontal = 3
+theme = ExtResource( 2 )
+text = "MusiC"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MusicVolumeSlider" type="HSlider" parent="UI/Options/Controls/VolumeControls/MusicVolume"]
+modulate = Color( 0.419608, 0.34902, 0.454902, 1 )
+margin_left = 32.0
+margin_right = 60.0
+margin_bottom = 4.0
+focus_neighbour_top = NodePath("../../SFXVolume/SFXVolumeSlider")
+focus_neighbour_bottom = NodePath("../../../DialogOps/DiagAllEnabled")
+focus_next = NodePath("../../../DialogOps/DiagAllEnabled")
+focus_previous = NodePath("../../SFXVolume/SFXVolumeSlider")
+size_flags_horizontal = 3
+theme = ExtResource( 2 )
+custom_icons/grabber_disabled = SubResource( 10 )
+custom_icons/grabber_highlight = SubResource( 11 )
+custom_icons/grabber = SubResource( 3 )
+custom_styles/slider = SubResource( 4 )
+custom_styles/grabber_area_highlight = SubResource( 15 )
+custom_styles/grabber_area = SubResource( 5 )
+min_value = -80.0
+max_value = 0.0
+step = 0.25
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DialogOps" type="VBoxContainer" parent="UI/Options/Controls"]
+margin_top = 26.0
+margin_right = 60.0
+margin_bottom = 45.0
+custom_constants/separation = -4
+
+[node name="Label" type="Label" parent="UI/Options/Controls/DialogOps"]
+margin_right = 60.0
+margin_bottom = 7.0
+theme = ExtResource( 2 )
+text = "Dialog...
+"
+
+[node name="DiagAllEnabled" type="CheckBox" parent="UI/Options/Controls/DialogOps"]
+margin_top = 3.0
+margin_right = 41.0
+margin_bottom = 12.0
+focus_neighbour_top = NodePath("../../VolumeControls/MusicVolume/MusicVolumeSlider")
+focus_neighbour_bottom = NodePath("../DiagInstructEnabled")
+focus_next = NodePath("../DiagInstructEnabled")
+focus_previous = NodePath("../../VolumeControls/MusicVolume/MusicVolumeSlider")
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme = ExtResource( 2 )
+custom_icons/radio_checked = SubResource( 16 )
+custom_icons/checked = SubResource( 17 )
+custom_icons/radio_unchecked = SubResource( 18 )
+custom_icons/unchecked = SubResource( 19 )
+custom_styles/hover = SubResource( 30 )
+custom_styles/pressed = SubResource( 30 )
+custom_styles/focus = SubResource( 30 )
+custom_styles/disabled = SubResource( 30 )
+custom_styles/hover_pressed = SubResource( 30 )
+custom_styles/normal = SubResource( 30 )
+custom_colors/font_color_hover_pressed = Color( 0.854902, 0.729412, 0.866667, 1 )
+custom_colors/font_color = Color( 0.509804, 0.372549, 0.560784, 1 )
+custom_colors/font_color_hover = Color( 0.854902, 0.729412, 0.866667, 1 )
+custom_colors/font_color_pressed = Color( 0.509804, 0.372549, 0.560784, 1 )
+text = "Enable"
+
+[node name="DiagInstructEnabled" type="CheckBox" parent="UI/Options/Controls/DialogOps"]
+margin_top = 8.0
+margin_right = 55.0
+margin_bottom = 19.0
+focus_neighbour_top = NodePath("../DiagAllEnabled")
+focus_neighbour_bottom = NodePath("../../../OptionsDone")
+focus_next = NodePath("../../../OptionsDone")
+focus_previous = NodePath("../DiagAllEnabled")
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme = ExtResource( 2 )
+custom_icons/radio_checked = SubResource( 16 )
+custom_icons/checked = SubResource( 17 )
+custom_icons/radio_unchecked = SubResource( 18 )
+custom_icons/unchecked = SubResource( 19 )
+custom_styles/hover = SubResource( 30 )
+custom_styles/pressed = SubResource( 30 )
+custom_styles/focus = SubResource( 30 )
+custom_styles/disabled = SubResource( 30 )
+custom_styles/hover_pressed = SubResource( 30 )
+custom_styles/normal = SubResource( 30 )
+custom_colors/font_color_hover_pressed = Color( 0.854902, 0.729412, 0.866667, 1 )
+custom_colors/font_color = Color( 0.509804, 0.372549, 0.560784, 1 )
+custom_colors/font_color_hover = Color( 0.854902, 0.729412, 0.866667, 1 )
+custom_colors/font_color_pressed = Color( 0.509804, 0.372549, 0.560784, 1 )
+text = "Instruct"
+
+[node name="OptionsDone" type="TextureButton" parent="UI/Options"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -30.0
+margin_top = 19.0
+margin_right = 30.0
+margin_bottom = 27.0
+focus_neighbour_top = NodePath("../Controls/DialogOps/DiagInstructEnabled")
+focus_neighbour_bottom = NodePath("../Controls/VolumeControls/MasterVolume/MasterVolumeSlider")
+focus_next = NodePath("../Controls/VolumeControls/MasterVolume/MasterVolumeSlider")
+focus_previous = NodePath("../Controls/DialogOps/DiagInstructEnabled")
+shortcut_in_tooltip = false
+texture_normal = ExtResource( 8 )
+texture_hover = ExtResource( 9 )
+expand = true
+stretch_mode = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="UI/Options/OptionsDone"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 1.0
+margin_top = -2.0
+margin_right = -0.18718
+margin_bottom = 1.0
+theme = ExtResource( 2 )
+custom_colors/font_color = Color( 0.678431, 0.580392, 0, 1 )
+text = "Done"
+align = 1
+valign = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -260,8 +627,21 @@ autowrap = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
-[connection signal="pressed" from="UI/Main Menu/Start" to="." method="_on_MainMenu_Start_pressed"]
-[connection signal="pressed" from="UI/Main Menu/Quit" to="." method="_on_MainMenu_Quit_pressed"]
+[connection signal="pressed" from="UI/Main Menu/Buttons/Start" to="." method="_on_MainMenu_Start_pressed"]
+[connection signal="pressed" from="UI/Main Menu/Buttons/Options" to="." method="_on_Options_pressed"]
+[connection signal="pressed" from="UI/Main Menu/Buttons/Quit" to="." method="_on_MainMenu_Quit_pressed"]
+[connection signal="focus_entered" from="UI/Options/Controls/VolumeControls/MasterVolume/MasterVolumeSlider" to="UI/Options/Controls" method="_on_MasterVolumeSlider_focus_entered"]
+[connection signal="focus_exited" from="UI/Options/Controls/VolumeControls/MasterVolume/MasterVolumeSlider" to="UI/Options/Controls" method="_on_MasterVolumeSlider_focus_exited"]
+[connection signal="value_changed" from="UI/Options/Controls/VolumeControls/MasterVolume/MasterVolumeSlider" to="." method="_on_MasterVolumeSlider_value_changed"]
+[connection signal="focus_entered" from="UI/Options/Controls/VolumeControls/SFXVolume/SFXVolumeSlider" to="UI/Options/Controls" method="_on_SFXVolumeSlider_focus_entered"]
+[connection signal="focus_exited" from="UI/Options/Controls/VolumeControls/SFXVolume/SFXVolumeSlider" to="UI/Options/Controls" method="_on_SFXVolumeSlider_focus_exited"]
+[connection signal="value_changed" from="UI/Options/Controls/VolumeControls/SFXVolume/SFXVolumeSlider" to="." method="_on_SFXVolumeSlider_value_changed"]
+[connection signal="focus_entered" from="UI/Options/Controls/VolumeControls/MusicVolume/MusicVolumeSlider" to="UI/Options/Controls" method="_on_MusicVolumeSlider_focus_entered"]
+[connection signal="focus_exited" from="UI/Options/Controls/VolumeControls/MusicVolume/MusicVolumeSlider" to="UI/Options/Controls" method="_on_MusicVolumeSlider_focus_exited"]
+[connection signal="value_changed" from="UI/Options/Controls/VolumeControls/MusicVolume/MusicVolumeSlider" to="." method="_on_MusicVolumeSlider_value_changed"]
+[connection signal="toggled" from="UI/Options/Controls/DialogOps/DiagAllEnabled" to="." method="_on_DiagAllEnabled_toggled"]
+[connection signal="toggled" from="UI/Options/Controls/DialogOps/DiagInstructEnabled" to="." method="_on_DiagInstructEnabled_toggled"]
+[connection signal="pressed" from="UI/Options/OptionsDone" to="." method="_on_OptionsDone_pressed"]
 [connection signal="restart_game" from="UI/Winner_Screen" to="." method="_on_restart_game"]
 [connection signal="tween_all_completed" from="UI/Winner_Screen/Tween" to="UI/Winner_Screen" method="_on_Tween_all_completed"]
 [connection signal="timeout" from="UI/Winner_Screen/DisplayTime" to="UI/Winner_Screen" method="_on_DisplayTime_timeout"]

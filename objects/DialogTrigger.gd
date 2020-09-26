@@ -4,6 +4,8 @@ const SWITCH_ON_SIGNAL = "switchOn"
 const SWITCH_OFF_SIGNAL = "switchOff"
 
 const DB_VAR = "GAMESTATE_Dialog"
+const DB_DIALOG_ENABLED = "DIALOG_ENABLED"
+const DB_DIALOG_TUTORIAL = "DIALOG_TUTORIAL_ENABLED"
 
 export (NodePath) var switch_path = "" setget _setSwitchPath
 export(String) var dialog_src = ""
@@ -30,6 +32,10 @@ var dialog_cancel_delay = 0.0
 
 var dialog_line = 0
 var dialog_display_time = 0.0
+var dialog_line_skip = false
+
+var dialog_enabled = true
+var dialog_tutorial_enabled = true
 
 signal switchOn
 signal switchOff
@@ -91,6 +97,10 @@ func _setDialogLine(n, triggers_only = false):
 					emit_signal("switchOn")
 				elif dialog_data.lines[n].switch == false:
 					emit_signal("switchOff")
+			if "tutorial" in dialog_data.lines[n]:
+				if dialog_data.lines[n].tutorial == true and not dialog_tutorial_enabled:
+					dialog_line_skip = true
+					return false # The one and only time this is not a bad thing.
 		elif type == TYPE_STRING:
 			line = dialog_data.lines[n]
 		else:
@@ -118,9 +128,37 @@ func _dialogEnd():
 	dialog_node.visible = false
 	Database.set(DB_VAR, false)
 
+func _dialogProcess(triggerOnly = false):
+	if not _setDialogLine(dialog_line, triggerOnly):
+		if dialog_line_skip:
+			dialog_line_skip = false
+			dialog_line = dialog_line + 1
+			_dialogProcess(triggerOnly)
+		if "next_src" in dialog_data:
+			var ndata = _loadDialogData(dialog_data.next_src)
+			if ndata:
+				reload_original_source = true
+				dialog_data = ndata
+				_configureFromData()
+				dialog_line = 0
+		else:
+			if reload_original_source:
+				var ndata = _loadDialogData(dialog_src)
+				if ndata:
+					dialog_data = ndata
+					_configureFromData()
+				else:
+					print("WARNING: Failed to reload original dialog data.")
+					repeatable = false # Force non-repeat because something went wrong.
+			_dialogEnd()
+	else:
+		dialog_line = dialog_line + 1
+
 
 func _ready():
 	ready = true
+	dialog_enabled = Database.get(DB_DIALOG_ENABLED, true)
+	dialog_tutorial_enabled = Database.get(DB_DIALOG_TUTORIAL, true)
 	if switch_path != "":
 		handle_autostart = false
 	dialog_node = get_tree().root.get_node("World/UI/Dialog")
@@ -154,24 +192,25 @@ func _input(event):
 			else:
 				dialog_display_time = 0
 				dialog_line = dialog_line + 1
-				if not _setDialogLine(dialog_line):
-					if "next_src" in dialog_data:
-						var ndata = _loadDialogData(dialog_data.next_src)
-						if ndata:
-							reload_original_source = true
-							dialog_data = ndata
-							_configureFromData()
-							dialog_line = 0
-					else:
-						if reload_original_source:
-							var ndata = _loadDialogData(dialog_src)
-							if ndata:
-								dialog_data = ndata
-								_configureFromData()
-							else:
-								print("WARNING: Failed to reload original dialog data.")
-								repeatable = false # Force non-repeat because something went wrong.
-						_dialogEnd()
+				_dialogProcess()
+				#if not _setDialogLine(dialog_line):
+				#	if "next_src" in dialog_data:
+				#		var ndata = _loadDialogData(dialog_data.next_src)
+				#		if ndata:
+				#			reload_original_source = true
+				#			dialog_data = ndata
+				#			_configureFromData()
+				#			dialog_line = 0
+				#	else:
+				#		if reload_original_source:
+				#			var ndata = _loadDialogData(dialog_src)
+				#			if ndata:
+				#				dialog_data = ndata
+				#				_configureFromData()
+				#			else:
+				#				print("WARNING: Failed to reload original dialog data.")
+				#				repeatable = false # Force non-repeat because something went wrong.
+				#		_dialogEnd()
 
 
 func _process(delta):
@@ -180,23 +219,26 @@ func _process(delta):
 		if auto_start_time <= 0.0:
 			_on_switch_on()
 
-	if dialog_playing and dialog_node.visible:
-		if attempt_cancel:
-			dialog_cancel_delay += delta
-			if dialog_cancel_delay >= dialog_cancel_time:
-				dialog_cancel_delay = 0.0
-				attempt_cancel = false
-		
-		if input_accept_delay > 0.0:
-			input_accept_delay -= delta
-			if input_accept_delay <= 0.0:
-				accept_input = true
-
-		if dialog_display_time < display_time:
-			dialog_display_time += delta
-			if dialog_display_time > display_time:
-				dialog_display_time = display_time
-			_updateDialogPercentage()
+	if dialog_playing:
+		if dialog_enabled and dialog_node.visible:
+			if attempt_cancel:
+				dialog_cancel_delay += delta
+				if dialog_cancel_delay >= dialog_cancel_time:
+					dialog_cancel_delay = 0.0
+					attempt_cancel = false
+			
+			if input_accept_delay > 0.0:
+				input_accept_delay -= delta
+				if input_accept_delay <= 0.0:
+					accept_input = true
+	
+			if dialog_display_time < display_time:
+				dialog_display_time += delta
+				if dialog_display_time > display_time:
+					dialog_display_time = display_time
+				_updateDialogPercentage()
+		elif not dialog_enabled:
+			_dialogProcess(true) # Only processing triggers. No actual dialog.
 
 
 func _on_switch_on():
@@ -206,11 +248,12 @@ func _on_switch_on():
 			# sends the 'switchOn' event!
 			handle_autostart = true
 		elif (not dialog_played or repeatable) and dialog_data != null:
-			if DB_VAR != "":
+			if DB_VAR != "" and dialog_enabled:
 				Database.set(DB_VAR, true)
 			dialog_playing = true
 			_configureFromData()
-			dialog_node.visible = true
+			if dialog_enabled:
+				dialog_node.visible = true
 			dialog_node.get_node("Label").text = dialog_data.lines[dialog_line]
 
 
