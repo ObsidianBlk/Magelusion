@@ -99,7 +99,6 @@ func _setDialogLine(n, triggers_only = false):
 					emit_signal("switchOff")
 			if "tutorial" in dialog_data.lines[n]:
 				if dialog_data.lines[n].tutorial == true and not dialog_tutorial_enabled:
-					print ("Skipping tutorial line... ", line)
 					dialog_line_skip = true
 					return false # The one and only time this is not a bad thing.
 		elif type == TYPE_STRING:
@@ -132,11 +131,10 @@ func _dialogEnd():
 func _dialogProcess(triggerOnly = false):
 	if not _setDialogLine(dialog_line, triggerOnly):
 		if dialog_line_skip:
-			print("Skipping Line")
 			dialog_line_skip = false
 			dialog_line = dialog_line + 1
 			_dialogProcess(triggerOnly)
-		if "next_src" in dialog_data:
+		elif "next_src" in dialog_data:
 			var ndata = _loadDialogData(dialog_data.next_src)
 			if ndata:
 				reload_original_source = true
@@ -161,6 +159,7 @@ func _ready():
 	ready = true
 	dialog_enabled = Database.get(DB_DIALOG_ENABLED, true)
 	dialog_tutorial_enabled = Database.get(DB_DIALOG_TUTORIAL, true)
+	Database.connect("valueChanged", self, "_on_DB_value_change")
 	if switch_path != "":
 		handle_autostart = false
 	dialog_node = get_tree().root.get_node("World/UI/Dialog")
@@ -193,26 +192,7 @@ func _input(event):
 				_updateDialogPercentage()
 			else:
 				dialog_display_time = 0
-				#dialog_line = dialog_line + 1
 				_dialogProcess()
-				#if not _setDialogLine(dialog_line):
-				#	if "next_src" in dialog_data:
-				#		var ndata = _loadDialogData(dialog_data.next_src)
-				#		if ndata:
-				#			reload_original_source = true
-				#			dialog_data = ndata
-				#			_configureFromData()
-				#			dialog_line = 0
-				#	else:
-				#		if reload_original_source:
-				#			var ndata = _loadDialogData(dialog_src)
-				#			if ndata:
-				#				dialog_data = ndata
-				#				_configureFromData()
-				#			else:
-				#				print("WARNING: Failed to reload original dialog data.")
-				#				repeatable = false # Force non-repeat because something went wrong.
-				#		_dialogEnd()
 
 
 func _process(delta):
@@ -242,6 +222,13 @@ func _process(delta):
 		elif not dialog_enabled:
 			_dialogProcess(true) # Only processing triggers. No actual dialog.
 
+
+func _on_DB_value_change(name, value):
+	match name:
+		DB_DIALOG_ENABLED:
+			dialog_enabled = (value == true)
+		DB_DIALOG_TUTORIAL:
+			dialog_tutorial_enabled = (value == true)
 
 func _on_switch_on():
 	if not dialog_playing:
