@@ -5,9 +5,9 @@
     "b":0.0
   },
   "lines":[
-    "Before you, Mage, lies",
-    "a door!",
-    "Don't get too excited.",
+    {"text":"Before you, Mage, lies", "tutorial":true},
+    {"text":"a door!", "tutorial":true},
+    {"text":"Don't get too excited.", "tutorial":true},
     "This door leads further",
     "through these dark",
     "dank",
@@ -40,7 +40,7 @@
     {"text":"figured that out", "tutorial":true},
     {"text":"without my help.", "tutorial":true},
     {"text":"You are welcome, mage", "tutorial":true},
-    {"text":"Now go through and", "tutorial":true},
+    "Now go through and",
     "lets see if you can",
     "find your way out!"
   ]
