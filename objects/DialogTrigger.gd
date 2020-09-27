@@ -256,7 +256,8 @@ func _on_switch_on():
 			_configureFromData()
 			if dialog_enabled:
 				dialog_node.visible = true
-			dialog_node.get_node("Label").text = dialog_data.lines[dialog_line]
+			_dialogProcess() # Because, there may be a switch on the first line!
+			#dialog_node.get_node("Label").text = dialog_data.lines[dialog_line]
 
 
 
