@@ -119,10 +119,6 @@ p1_cast={
 2d_physics/layer_13="Steam Particles"
 2d_physics/layer_14="Blood Particles"
 
-[physics]
-
-2d/thread_model=2
-
 [rendering]
 
 quality/2d/use_pixel_snap=true
